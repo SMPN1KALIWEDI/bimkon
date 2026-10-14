@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#1a73e8">
+<title>Aplikasi BK SMP</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%231a73e8'/><text x='50' y='65' font-size='50' text-anchor='middle' fill='white' font-family='Arial'>BK</text></svg>">
+<style>
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f4f6f9; margin: 0; padding: 0; }
+  .app-header { background: linear-gradient(135deg, #1a73e8 0%, #0d47a1 100%); color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100; }
+  .app-title { font-size: 18px; font-weight: bold; margin: 0; }
+  .container { max-width: 900px; margin: 0 auto; padding: 15px; padding-bottom: 80px; }
+  .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: white; display: flex; overflow-x: auto; padding: 8px 0; box-shadow: 0 -2px 10px rgba(0,0,0,0.08); z-index: 100; }
+  .nav-item { flex: 1; min-width: 70px; text-align: center; padding: 6px 4px; cursor: pointer; border: none; background: none; color: #666; font-size: 10px; }
+  .nav-item.active { color: #1a73e8; font-weight: bold; }
+  .nav-icon { font-size: 20px; display: block; margin-bottom: 2px; }
+  .page { display: none; }
+  .page.active { display: block; animation: fadeIn 0.3s; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .card { background: white; border-radius: 12px; padding: 15px; margin-bottom: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+  .card-title { font-size: 14px; font-weight: bold; color: #333; margin: 0 0 10px 0; }
+  .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 15px; }
+  .stat-card { background: white; border-radius: 12px; padding: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border-left: 4px solid #1a73e8; }
+  .stat-card.green { border-left-color: #28a745; }
+  .stat-card.orange { border-left-color: #f0ad4e; }
+  .stat-card.red { border-left-color: #dc3545; }
+  .stat-card.purple { border-left-color: #6f42c1; }
+  .stat-number { font-size: 24px; font-weight: bold; color: #1a73e8; }
+  .stat-label { font-size: 11px; color: #666; margin-top: 4px; }
+  .chart-bar { margin-bottom: 8px; }
+  .chart-label { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px; }
+  .chart-track { background: #e9ecef; border-radius: 4px; height: 8px; overflow: hidden; }
+  .chart-fill { background: linear-gradient(90deg, #1a73e8, #4285f4); height: 100%; border-radius: 4px; }
+  .form-group { margin-bottom: 12px; }
+  label { display: block; font-weight: 600; margin-bottom: 5px; color: #333; font-size: 13px; }
+  input, select, textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; background: white; }
+  .row { display: flex; gap: 10px; }
+  .col { flex: 1; }
+  .btn { background: #1a73e8; color: white; padding: 12px; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: bold; width: 100%; margin-top: 8px; }
+  .btn-secondary { background: #6c757d; }
+  .btn-warning { background: #f0ad4e; color: #000; }
+  .btn-success { background: #28a745; }
+  .btn:disabled { background: #ccc; }
+  .search-box { background: #f8f9fa; padding: 12px; border-radius: 10px; border: 1px solid #e9ecef; margin-bottom: 12px; }
+  .selected-info { background: #e7f1ff; padding: 10px; border-radius: 8px; border-left: 4px solid #1a73e8; margin-top: 10px; display: none; }
+  .alert { padding: 10px; border-radius: 8px; margin-top: 10px; display: none; text-align: center; font-weight: 600; font-size: 13px; }
+  .alert-success { background: #d4edda; color: #155724; }
+  .alert-error { background: #f8d7da; color: #721c24; }
+  .laporan-item { background: white; border-radius: 10px; padding: 12px; margin-bottom: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); border-left: 4px solid #1a73e8; }
+  .laporan-nama { font-weight: bold; color: #1a73e8; font-size: 15px; }
+  .laporan-kelas { font-size: 12px; color: #666; }
+  .laporan-detail { font-size: 12px; color: #555; margin: 6px 0; }
+  .badge { padding: 3px 8px; border-radius: 12px; font-size: 10px; font-weight: bold; display: inline-block; }
+  .badge-baru { background: #e7f1ff; color: #1a73e8; }
+  .badge-proses { background: #fff3cd; color: #856404; }
+  .badge-selesai { background: #d4edda; color: #155724; }
+  .badge-rujuk { background: #f8d7da; color: #721c24; }
+  .loading { text-align: center; padding: 20px; color: #999; }
+  @media print {
+    .app-header, .bottom-nav, .btn, .no-print { display: none !important; }
+    .page { padding-bottom: 0; display: block !important; }
+    body { background: white; }
+    .container { max-width: 100%; padding: 0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="app-header">
+  <div>
+    <div class="app-title">📚 Aplikasi BK</div>
+    <div style="font-size: 11px; opacity: 0.9;">SMP - Bimbingan Konseling</div>
+  </div>
+</div>
+
+<div class="container">
+  <!-- DASHBOARD -->
+  <div id="page-dashboard" class="page active">
+    <div class="card">
+      <div class="card-title">📊 Ringkasan Data Siswa</div>
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-number" id="d_totalSiswa">-</div><div class="stat-label">Total Siswa Aktif</div></div>
+        <div class="stat-card green"><div class="stat-number" id="d_kelas7">-</div><div class="stat-label">Kelas 7</div></div>
+        <div class="stat-card orange"><div class="stat-number" id="d_kelas8">-</div><div class="stat-label">Kelas 8</div></div>
+        <div class="stat-card red"><div class="stat-number" id="d_kelas9">-</div><div class="stat-label">Kelas 9</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">📈 Statistik Layanan BK</div>
+      <div class="stats-grid">
+        <div class="stat-card purple"><div class="stat-number" id="d_totalLayanan">-</div><div class="stat-label">Total Layanan</div></div>
+        <div class="stat-card green"><div class="stat-number" id="d_bulanIni">-</div><div class="stat-label">Bulan Ini</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">📋 Jenis Layanan</div>
+      <div id="chartJenis"></div>
+    </div>
+  </div>
+
+  <!-- INPUT LAYANAN -->
+  <div id="page-layanan" class="page">
+    <div class="card">
+      <div class="card-title"> Input Layanan Konseling</div>
+      <form id="formLayanan" onsubmit="submitLayanan(event)">
+        <div class="search-box">
+          <label>🔍 Cari Siswa</label>
+          <div class="row">
+            <div class="col"><select id="lay_tingkat" onchange="loadKelas('lay')"><option value="">Pilih Tingkat</option><option value="7">Kelas 7</option><option value="8">Kelas 8</option><option value="9">Kelas 9</option></select></div>
+            <div class="col"><select id="lay_kelas" onchange="loadSiswa('lay')" disabled><option value="">Pilih Kelas</option></select></div>
+          </div>
+          <div style="margin-top:10px;"><select id="lay_nama" onchange="selectSiswa('lay')" disabled><option value="">Pilih Nama Siswa</option></select></div>
+          <div id="lay_selected" class="selected-info"><strong id="lay_nama_display">-</strong><br><small>NISN: <span id="lay_nisn_display">-</span> | Kelas: <span id="lay_kelas_display">-</span></small></div>
+        </div>
+        <input type="hidden" id="lay_nisn" name="nisn">
+        <div class="row">
+          <div class="col form-group"><label>Jenis Layanan</label><select name="jenisLayanan" required><option value="">-- Pilih --</option><option>Konseling Individu</option><option>Bimbingan Klasikal</option><option>Konseling Kelompok</option><option>Mediasi</option><option>Home Visit</option></select></div>
+          <div class="col form-group"><label>Kategori</label><select name="kategori" required><option value="">-- Pilih --</option><option>Pribadi</option><option>Sosial</option><option>Belajar/Akademik</option><option>Karir</option></select></div>
+        </div>
+        <div class="form-group"><label>Deskripsi Masalah</label><textarea name="deskripsi" rows="3" required></textarea></div>
+        <div class="form-group"><label>Tindak Lanjut</label><textarea name="tindakLanjut" rows="3" required></textarea></div>
+        <div class="form-group"><label>Nama Petugas BK</label><input type="text" name="petugas" required></div>
+        <button type="submit" class="btn btn-success" id="btnLayanan">💾 Simpan Layanan</button>
+      </form>
+      <div id="alert-layanan" class="alert"></div>
+    </div>
+  </div>
+
+  <!-- DATA SISWA -->
+  <div id="page-siswa" class="page">
+    <div class="card">
+      <div class="card-title">👥 Kelola Data Siswa</div>
+      <form id="formSiswa" onsubmit="submitSiswa(event)">
+        <input type="hidden" id="siswa_mode" value="tambah">
+        <div class="search-box">
+          <label>🔍 Cari Siswa untuk Diedit</label>
+          <div class="row">
+            <div class="col"><select id="siswa_tingkat" onchange="loadKelas('siswa')"><option value="">Pilih Tingkat</option><option value="7">Kelas 7</option><option value="8">Kelas 8</option><option value="9">Kelas 9</option></select></div>
+            <div class="col"><select id="siswa_kelas" onchange="loadSiswa('siswa')" disabled><option value="">Pilih Kelas</option></select></div>
+          </div>
+          <div style="margin-top:10px;"><select id="siswa_nama" onchange="selectSiswaEdit('siswa')" disabled><option value="">Pilih Nama Siswa</option></select></div>
+        </div>
+        <div class="row"><div class="col form-group"><label>NISN *</label><input type="text" id="s_nisn" name="nisn" required></div><div class="col form-group"><label>Kelas *</label><input type="text" id="s_kelas" name="kelas" required placeholder="Cth: 7A"></div></div>
+        <div class="form-group"><label>Nama Lengkap *</label><input type="text" id="s_nama" name="nama" required></div>
+        <div class="row"><div class="col form-group"><label>Jenis Kelamin</label><select id="s_jk" name="jenisKelamin"><option value="">--</option><option value="L">Laki-laki</option><option value="P">Perempuan</option></select></div><div class="col form-group"><label>Status</label><select id="s_status" name="status"><option value="Aktif">Aktif</option><option value="Pindah">Pindah</option><option value="Lulus">Lulus</option></select></div></div>
+        <div class="form-group"><label>No. HP Siswa</label><input type="tel" id="s_hp1" name="noHpSiswa"></div>
+        <div class="form-group"><label>No. HP Orang Tua *</label><input type="tel" id="s_hp2" name="noHpOrtu" required></div>
+        <div class="form-group"><label>Alamat</label><textarea id="s_alamat" name="alamat" rows="2"></textarea></div>
+        <button type="submit" class="btn btn-success" id="btnSiswa">➕ Tambah Siswa</button>
+        <button type="button" class="btn btn-warning" id="btnReset" style="display:none;" onclick="resetSiswaForm()">Batal Edit</button>
+      </form>
+      <div id="alert-siswa" class="alert"></div>
+    </div>
+  </div>
+
+  <!-- ADMINISTRASI BK -->
+  <div id="page-administrasi" class="page">
+    <div class="card">
+      <div class="card-title">📋 Tambah Program Administrasi BK</div>
+      <form id="formAdministrasi" onsubmit="submitAdministrasi(event)">
+        <div class="row">
+          <div class="col form-group"><label>Jenis Program *</label><select name="jenisProgram" required><option value="">-- Pilih --</option><option>Program Tahunan</option><option>Program Semester</option><option>Program Bulanan</option><option>Program Mingguan</option></select></div>
+          <div class="col form-group"><label>Periode *</label><input type="text" name="periode" required placeholder="Cth: 2024/2025"></div>
+        </div>
+        <div class="row">
+          <div class="col form-group"><label>Tanggal Mulai *</label><input type="date" name="tanggalMulai" required></div>
+          <div class="col form-group"><label>Tanggal Selesai *</label><input type="date" name="tanggalSelesai" required></div>
+        </div>
+        <div class="form-group"><label>Tujuan Program *</label><textarea name="tujuan" rows="2" required></textarea></div>
+        <div class="form-group"><label>Deskripsi Program *</label><textarea name="deskripsi" rows="3" required></textarea></div>
+        <div class="form-group"><label>Target Sasaran *</label><input type="text" name="targetSasaran" required></div>
+        <div class="form-group"><label>Metode Pelaksanaan *</label><input type="text" name="metode" required></div>
+        <div class="form-group"><label>Evaluasi</label><textarea name="evaluasi" rows="2"></textarea></div>
+        <div class="form-group"><label>Nama Petugas BK *</label><input type="text" name="petugas" required></div>
+        <button type="submit" class="btn btn-success" id="btnAdministrasi">💾 Simpan Program</button>
+      </form>
+      <div id="alert-administrasi" class="alert"></div>
+    </div>
+    <div class="card no-print">
+      <div class="card-title">📊 Daftar Program</div>
+      <div class="row">
+        <div class="col form-group"><label>Filter Jenis</label><select id="filter_admin_jenis" onchange="loadAdministrasi()"><option value="">Semua</option><option>Program Tahunan</option><option>Program Semester</option><option>Program Bulanan</option><option>Program Mingguan</option></select></div>
+        <div class="col form-group"><label>Filter Status</label><select id="filter_admin_status" onchange="loadAdministrasi()"><option value="">Semua</option><option>Draft</option><option>Aktif</option><option>Selesai</option></select></div>
+      </div>
+      <button class="btn" onclick="loadAdministrasi()">🔄 Refresh</button>
+    </div>
+    <div id="administrasiList"></div>
+  </div>
+
+  <!-- RPL BK -->
+  <div id="page-rpl" class="page">
+    <div class="card">
+      <div class="card-title">📝 Tambah RPL BK</div>
+      <form id="formRPL" onsubmit="submitRPL(event)">
+        <div class="form-group"><label>Topik Layanan *</label><input type="text" name="topik" required></div>
+        <div class="row">
+          <div class="col form-group"><label>Jenis Layanan *</label><select name="jenisLayanan" required><option value="">-- Pilih --</option><option>Bimbingan Klasikal</option><option>Konseling Individu</option><option>Konseling Kelompok</option></select></div>
+          <div class="col form-group"><label>Kelas Target *</label><input type="text" name="kelasTarget" required></div>
+        </div>
+        <div class="form-group"><label>Tujuan Layanan *</label><textarea name="tujuanLayanan" rows="2" required></textarea></div>
+        <div class="form-group"><label>Materi Layanan *</label><textarea name="materi" rows="3" required></textarea></div>
+        <div class="row">
+          <div class="col form-group"><label>Metode *</label><input type="text" name="metode" required></div>
+          <div class="col form-group"><label>Waktu (menit) *</label><input type="number" name="waktu" required></div>
+        </div>
+        <div class="form-group"><label>Evaluasi</label><textarea name="evaluasi" rows="2"></textarea></div>
+        <div class="form-group"><label>Catatan</label><textarea name="catatan" rows="2"></textarea></div>
+        <div class="form-group"><label>Nama Petugas BK *</label><input type="text" name="petugas" required></div>
+        <button type="submit" class="btn btn-success" id="btnRPL">💾 Simpan RPL</button>
+      </form>
+      <div id="alert-rpl" class="alert"></div>
+    </div>
+    <div class="card no-print">
+      <div class="card-title">📋 Daftar RPL</div>
+      <div class="row">
+        <div class="col form-group"><label>Filter Jenis</label><select id="filter_rpl_jenis" onchange="loadRPL()"><option value="">Semua</option><option>Bimbingan Klasikal</option><option>Konseling Individu</option><option>Konseling Kelompok</option></select></div>
+        <div class="col form-group"><label>Filter Kelas</label><select id="filter_rpl_kelas" onchange="loadRPL()"><option value="">Semua</option><option value="7">Kelas 7</option><option value="8">Kelas 8</option><option value="9">Kelas 9</option></select></div>
+      </div>
+      <button class="btn" onclick="loadRPL()">🔄 Refresh</button>
+    </div>
+    <div id="rplList"></div>
+  </div>
+
+  <!-- JADWAL BK -->
+  <div id="page-jadwal" class="page">
+    <div class="card">
+      <div class="card-title"> Tambah Jadwal BK</div>
+      <form id="formJadwal" onsubmit="submitJadwal(event)">
+        <div class="row">
+          <div class="col form-group"><label>Tanggal *</label><input type="date" name="tanggal" required></div>
+          <div class="col form-group"><label>Jenis Layanan *</label><select name="jenisLayanan" required><option value="">-- Pilih --</option><option>Bimbingan Klasikal</option><option>Konseling Individu</option><option>Konseling Kelompok</option></select></div>
+        </div>
+        <div class="row">
+          <div class="col form-group"><label>Jam Mulai *</label><input type="time" name="jamMulai" required></div>
+          <div class="col form-group"><label>Jam Selesai *</label><input type="time" name="jamSelesai" required></div>
+        </div>
+        <div class="form-group"><label>Topik *</label><input type="text" name="topik" required></div>
+        <div class="row">
+          <div class="col form-group"><label>Kelas *</label><input type="text" name="kelas" required></div>
+          <div class="col form-group"><label>Lokasi *</label><input type="text" name="lokasi" required></div>
+        </div>
+        <div class="form-group"><label>Nama Petugas BK *</label><input type="text" name="petugas" required></div>
+        <div class="form-group"><label>Catatan</label><textarea name="catatan" rows="2"></textarea></div>
+        <button type="submit" class="btn btn-success" id="btnJadwal"> Simpan Jadwal</button>
+      </form>
+      <div id="alert-jadwal" class="alert"></div>
+    </div>
+    <div class="card no-print">
+      <div class="card-title">📊 Daftar Jadwal</div>
+      <div class="row">
+        <div class="col form-group"><label>Filter Tanggal</label><input type="date" id="filter_jadwal_tanggal" onchange="loadJadwal()"></div>
+        <div class="col form-group"><label>Filter Kelas</label><select id="filter_jadwal_kelas" onchange="loadJadwal()"><option value="">Semua</option><option value="7">Kelas 7</option><option value="8">Kelas 8</option><option value="9">Kelas 9</option></select></div>
+      </div>
+      <button class="btn" onclick="loadJadwal()">🔄 Refresh</button>
+    </div>
+    <div id="jadwalList"></div>
+  </div>
+
+  <!-- LAPORAN -->
+  <div id="page-laporan" class="page">
+    <div class="card no-print">
+      <div class="card-title"> Filter Laporan</div>
+      <div class="row">
+        <div class="col form-group"><label>Tanggal Mulai</label><input type="date" id="filter_tglMulai"></div>
+        <div class="col form-group"><label>Tanggal Akhir</label><input type="date" id="filter_tglAkhir"></div>
+      </div>
+      <div class="row">
+        <div class="col form-group"><label>Tingkat Kelas</label><select id="filter_kelas"><option value="">Semua</option><option value="7">Kelas 7</option><option value="8">Kelas 8</option><option value="9">Kelas 9</option></select></div>
+        <div class="col form-group"><label>Jenis Layanan</label><select id="filter_jenis"><option value="">Semua</option><option>Konseling Individu</option><option>Bimbingan Klasikal</option><option>Konseling Kelompok</option><option>Mediasi</option><option>Home Visit</option></select></div>
+      </div>
+      <button class="btn" onclick="loadLaporan()">🔍 Tampilkan Laporan</button>
+    </div>
+    <div class="card no-print" style="display:flex; gap:10px;">
+      <button class="btn btn-success" style="margin:0;" onclick="window.print()">🖨️ Cetak / PDF</button>
+    </div>
+    <div id="laporanSummary" class="card" style="display:none;">
+      <div class="card-title"> Ringkasan</div>
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-number" id="r_total">0</div><div class="stat-label">Total Data</div></div>
+        <div class="stat-card green"><div class="stat-number" id="r_selesai">0</div><div class="stat-label">Selesai</div></div>
+        <div class="stat-card orange"><div class="stat-number" id="r_proses">0</div><div class="stat-label">Proses</div></div>
+        <div class="stat-card red"><div class="stat-number" id="r_rujuk">0</div><div class="stat-label">Rujuk</div></div>
+      </div>
+    </div>
+    <div id="laporanList"></div>
+  </div>
+
+  <!-- CETAK DOKUMEN -->
+  <div id="page-cetak" class="page">
+    <div class="card">
+      <div class="card-title">️ Cetak Dokumen BK</div>
+      <p style="font-size:13px; color:#666; margin-bottom:15px;">Pilih jenis dokumen yang ingin dicetak:</p>
+      <div class="stats-grid">
+        <button class="btn btn-success" onclick="cetakDokumen('Laporan Layanan BK')"> Laporan Layanan</button>
+        <button class="btn btn-warning" onclick="cetakDokumen('Administrasi BK')">📊 Administrasi BK</button>
+        <button class="btn" onclick="cetakDokumen('RPL BK')">📝 RPL BK</button>
+        <button class="btn btn-secondary" onclick="cetakDokumen('Jadwal BK')">📅 Jadwal BK</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">📄 Preview Dokumen</div>
+      <div id="cetakPreview" style="min-height:200px; padding:20px; background:#f8f9fa; border-radius:8px; text-align:center; color:#999;">
+        Pilih jenis dokumen untuk melihat preview
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Bottom Navigation -->
+<div class="bottom-nav">
+  <button class="nav-item active" onclick="switchPage('dashboard', this)"><span class="nav-icon">📊</span>Dashboard</button>
+  <button class="nav-item" onclick="switchPage('layanan', this)"><span class="nav-icon">📝</span>Input</button>
+  <button class="nav-item" onclick="switchPage('siswa', this)"><span class="nav-icon">👥</span>Siswa</button>
+  <button class="nav-item" onclick="switchPage('administrasi', this)"><span class="nav-icon">📋</span>Admin</button>
+  <button class="nav-item" onclick="switchPage('rpl', this)"><span class="nav-icon">📄</span>RPL</button>
+  <button class="nav-item" onclick="switchPage('jadwal', this)"><span class="nav-icon">📅</span>Jadwal</button>
+  <button class="nav-item" onclick="switchPage('laporan', this)"><span class="nav-icon">📈</span>Laporan</button>
+  <button class="nav-item" onclick="switchPage('cetak', this)"><span class="nav-icon">🖨️</span>Cetak</button>
+</div>
+
+<script>
+// ⚠️ GANTI URL INI DENGAN URL APPS SCRIPT ANDA
+const API_URL = 'URL_API_ANDA_DI_SINI';
+
+// Helper functions untuk API call
+async function apiGet(action, params = {}) {
+  params.action = action;
+  const queryString = Object.keys(params).map(key => key + '=' + encodeURIComponent(params[key])).join('&');
+  const response = await fetch(API_URL + '?' + queryString);
+  return await response.json();
+}
+
+async function apiPost(action, data = {}) {
+  const response = await fetch(API_URL + '?action=' + action, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  });
+  // Karena no-cors, response tidak bisa dibaca, tapi data tetap terkirim
+  return { success: true, message: 'Data berhasil dikirim!' };
+}
+
+// Navigasi
+function switchPage(page, btn) {
+  document.querySelectorAll('.nav-item').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('page-' + page).classList.add('active');
+  if (page === 'dashboard') loadDashboard();
+  if (page === 'administrasi') loadAdministrasi();
+  if (page === 'rpl') loadRPL();
+  if (page === 'jadwal') loadJadwal();
+  if (page === 'laporan') {
+    const today = new Date();
+    const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
+    document.getElementById('filter_tglMulai').value = firstDay.toISOString().split('T')[0];
+    document.getElementById('filter_tglAkhir').value = today.toISOString().split('T')[0];
+    loadLaporan();
+  }
+}
+
+// Dashboard
+async function loadDashboard() {
+  try {
+    const stats = await apiGet('getDashboardStats');
+    document.getElementById('d_totalSiswa').innerText = stats.siswa.total;
+    document.getElementById('d_kelas7').innerText = stats.siswa.kelas7;
+    document.getElementById('d_kelas8').innerText = stats.siswa.kelas8;
+    document.getElementById('d_kelas9').innerText = stats.siswa.kelas9;
+    document.getElementById('d_totalLayanan').innerText = stats.layanan.total;
+    document.getElementById('d_bulanIni').innerText = stats.layanan.bulanIni;
+    renderChart('chartJenis', stats.layanan.jenis, stats.layanan.total);
+  } catch (e) {
+    console.error('Error loading dashboard:', e);
+  }
+}
+
+function renderChart(containerId, data, total) {
+  const container = document.getElementById(containerId);
+  if (!total || total === 0) { container.innerHTML = '<p style="text-align:center; color:#999; font-size:12px;">Belum ada data</p>'; return; }
+  const entries = Object.entries(data).sort((a,b) => b[1]-a[1]);
+  container.innerHTML = entries.map(([label, count]) => {
+    const pct = Math.round((count/total)*100);
+    return '<div class="chart-bar"><div class="chart-label"><span>'+label+'</span><span><b>'+count+'</b> ('+pct+'%)</span></div><div class="chart-track"><div class="chart-fill" style="width:'+pct+'%"></div></div></div>';
+  }).join('');
+}
+
+// Pencarian Siswa
+async function loadKelas(prefix) {
+  const tingkat = document.getElementById(prefix + '_tingkat').value;
+  const selKelas = document.getElementById(prefix + '_kelas');
+  const selNama = document.getElementById(prefix + '_nama');
+  selKelas.innerHTML = '<option value="">Memuat...</option>'; selKelas.disabled = true;
+  selNama.innerHTML = '<option value="">Pilih Kelas dulu</option>'; selNama.disabled = true;
+  if(prefix === 'lay') document.getElementById('lay_selected').style.display = 'none';
+  if (!tingkat) { selKelas.innerHTML = '<option value="">Pilih Kelas</option>'; return; }
+  
+  try {
+    const list = await apiGet('getDaftarKelas', { tingkat: tingkat });
+    selKelas.innerHTML = '<option value="">Pilih Kelas</option>';
+    list.forEach(k => selKelas.innerHTML += '<option value="'+k+'">'+k+'</option>');
+    selKelas.disabled = false;
+  } catch (e) { console.error(e); }
+}
+
+async function loadSiswa(prefix) {
+  const kelas = document.getElementById(prefix + '_kelas').value;
+  const selNama = document.getElementById(prefix + '_nama');
+  selNama.innerHTML = '<option value="">Memuat...</option>'; selNama.disabled = true;
+  if(prefix === 'lay') document.getElementById('lay_selected').style.display = 'none';
+  if (!kelas) { selNama.innerHTML = '<option value="">Pilih Nama Siswa</option>'; return; }
+  
+  try {
+    const list = await apiGet('getSiswaByKelas', { kelas: kelas });
+    selNama.innerHTML = '<option value="">Pilih Nama Siswa</option>';
+    list.forEach(s => selNama.innerHTML += '<option value="'+s.nisn+'" data-nama="'+s.nama+'" data-kelas="'+s.kelas+'">'+s.nama+'</option>');
+    selNama.disabled = false;
+  } catch (e) { console.error(e); }
+}
+
+function selectSiswa(prefix) {
+  const sel = document.getElementById(prefix + '_nama');
+  const opt = sel.options[sel.selectedIndex];
+  if (opt.value) {
+    document.getElementById('lay_nisn').value = opt.value;
+    document.getElementById('lay_nama_display').innerText = opt.getAttribute('data-nama');
+    document.getElementById('lay_nisn_display').innerText = opt.value;
+    document.getElementById('lay_kelas_display').innerText = opt.getAttribute('data-kelas');
+    document.getElementById('lay_selected').style.display = 'block';
+  }
+}
+
+async function selectSiswaEdit(prefix) {
+  const sel = document.getElementById(prefix + '_nama');
+  const opt = sel.options[sel.selectedIndex];
+  if (opt.value) {
+    try {
+      const res = await apiGet('cariSiswaByNISN', { nisn: opt.value });
+      if (res.found) {
+        document.getElementById('siswa_mode').value = 'edit';
+        document.getElementById('s_nisn').value = res.data.NISN;
+        document.getElementById('s_nama').value = res.data.NAMA;
+        document.getElementById('s_kelas').value = res.data.KLS;
+        document.getElementById('s_jk').value = res.data.L_P;
+        document.getElementById('s_hp1').value = res.data.NO_SISWA;
+        document.getElementById('s_hp2').value = res.data.NO_ORTU;
+        document.getElementById('s_alamat').value = res.data.ALAMAT;
+        document.getElementById('s_status').value = res.data.STATUS;
+        document.getElementById('btnSiswa').innerText = '💾 Update Data';
+        document.getElementById('btnSiswa').className = 'btn btn-warning';
+        document.getElementById('btnReset').style.display = 'block';
+        showAlert('siswa', 'Data dimuat. Silakan edit.', 'success');
+      }
+    } catch (e) { console.error(e); }
+  }
+}
+
+// Submit Forms
+async function submitLayanan(e) {
+  e.preventDefault();
+  if (!document.getElementById('lay_nisn').value) { showAlert('layanan', '⚠️ Pilih siswa terlebih dahulu!', 'error'); return; }
+  const btn = document.getElementById('btnLayanan');
+  btn.disabled = true; btn.innerText = '⏳ Menyimpan...';
+  
+  try {
+    const formData = new FormData(document.getElementById('formLayanan'));
+    const data = Object.fromEntries(formData);
+    const res = await apiPost('simpanLayanan', data);
+    btn.disabled = false; btn.innerText = '💾 Simpan Layanan';
+    showAlert('layanan', res.message, res.success ? 'success' : 'error');
+    if (res.success) {
+      document.getElementById('formLayanan').reset();
+      document.getElementById('lay_selected').style.display = 'none';
+      document.getElementById('lay_nama').innerHTML = '<option value="">Pilih Nama Siswa</option>';
+      document.getElementById('lay_nama').disabled = true;
+    }
+  } catch (err) {
+    btn.disabled = false; btn.innerText = '💾 Simpan Layanan';
+    showAlert('layanan', 'Error: ' + err.message, 'error');
+  }
+}
+
+async function submitSiswa(e) {
+  e.preventDefault();
+  const mode = document.getElementById('siswa_mode').value;
+  const btn = document.getElementById('btnSiswa');
+  btn.disabled = true; btn.innerText = '⏳ Menyimpan...';
+  
+  try {
+    const formData = new FormData(document.getElementById('formSiswa'));
+    const data = Object.fromEntries(formData);
+    const res = await apiPost(mode === 'edit' ? 'updateSiswa' : 'tambahSiswa', data);
+    btn.disabled = false;
+    btn.innerText = mode === 'edit' ? '💾 Update Data' : ' Tambah Siswa';
+    showAlert('siswa', res.message, res.success ? 'success' : 'error');
+    if (res.success && mode === 'tambah') document.getElementById('formSiswa').reset();
+  } catch (err) {
+    btn.disabled = false;
+    showAlert('siswa', 'Error: ' + err.message, 'error');
+  }
+}
+
+function resetSiswaForm() {
+  document.getElementById('formSiswa').reset();
+  document.getElementById('siswa_mode').value = 'tambah';
+  document.getElementById('btnSiswa').innerText = '➕ Tambah Siswa';
+  document.getElementById('btnSiswa').className = 'btn btn-success';
+  document.getElementById('btnReset').style.display = 'none';
+  document.getElementById('alert-siswa').style.display = 'none';
+}
+
+async function loadLaporan() {
+  const filter = {
+    tanggalMulai: document.getElementById('filter_tglMulai').value,
+    tanggalAkhir: document.getElementById('filter_tglAkhir').value,
+    kelas: document.getElementById('filter_kelas').value,
+    jenisLayanan: document.getElementById('filter_jenis').value
+  };
+  const listContainer = document.getElementById('laporanList');
+  listContainer.innerHTML = '<div class="loading">⏳ Memuat...</div>';
+  
+  try {
+    const data = await apiGet('getLaporanLayanan', filter);
+    if (data.length === 0) { listContainer.innerHTML = '<div class="loading">📭 Tidak ada data</div>'; document.getElementById('laporanSummary').style.display = 'none'; return; }
+    let selesai=0, proses=0, rujuk=0;
+    data.forEach(d => { const s = String(d['STATUS'] || 'Baru'); if (s === 'Selesai') selesai++; else if (s === 'Dalam Proses') proses++; else if (s === 'Rujuk') rujuk++; });
+    document.getElementById('r_total').innerText = data.length;
+    document.getElementById('r_selesai').innerText = selesai;
+    document.getElementById('r_proses').innerText = proses;
+    document.getElementById('r_rujuk').innerText = rujuk;
+    document.getElementById('laporanSummary').style.display = 'block';
+    listContainer.innerHTML = data.map(d => {
+      const status = d['STATUS'] || 'Baru';
+      let badgeClass = 'badge-baru';
+      if (status === 'Selesai') badgeClass = 'badge-selesai';
+      else if (status === 'Dalam Proses') badgeClass = 'badge-proses';
+      else if (status === 'Rujuk') badgeClass = 'badge-rujuk';
+      return '<div class="laporan-item"><div style="display:flex; justify-content:space-between;"><div><div class="laporan-nama">'+(d['NAMA_SISWA']||'-')+'</div><div class="laporan-kelas">Kelas: '+(d['KELAS']||'-')+' | NISN: '+(d['NISN']||'-')+'</div></div><div style="text-align:right;"><div style="font-size:11px; color:#666;">'+(d['ID_LAYANAN']||'-')+'</div><div style="font-size:11px; color:#999;">'+(d['TANGGAL']||'-')+'</div></div></div><div class="laporan-detail"><b>'+(d['JENIS_LAYANAN']||'-')+'</b> • '+(d['KATEGORI']||'-')+'</div><div class="laporan-detail"><b>Masalah:</b> '+(d['DESKRIPSI']||'-')+'</div><div class="laporan-detail"><b>Tindak Lanjut:</b> '+(d['TINDAK_LANJUT']||'-')+'</div><div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px;"><span class="badge '+badgeClass+'">'+status+'</span><select onchange="changeStatus(\''+d['ID_LAYANAN']+'\', this.value)" class="no-print" style="padding:4px; font-size:11px; width:auto;"><option value="Baru" '+(status==='Baru'?'selected':'')+'>Baru</option><option value="Dalam Proses" '+(status==='Dalam Proses'?'selected':'')+'>Proses</option><option value="Selesai" '+(status==='Selesai'?'selected':'')+'>Selesai</option><option value="Rujuk" '+(status==='Rujuk'?'selected':'')+'>Rujuk</option></select></div></div>';
+    }).join('');
+  } catch (e) { console.error(e); }
+}
+
+async function changeStatus(id, statusBaru) {
+  try {
+    const res = await apiPost('updateStatusLayanan', { id: id, status: statusBaru });
+    if (res.success) { showAlert('laporan', '✅ Status diupdate!', 'success'); loadLaporan(); }
+  } catch (e) { console.error(e); }
+}
+
+async function submitAdministrasi(e) {
+  e.preventDefault();
+  const btn = document.getElementById('btnAdministrasi');
+  btn.disabled = true; btn.innerText = '⏳ Menyimpan...';
+  try {
+    const formData = new FormData(document.getElementById('formAdministrasi'));
+    const data = Object.fromEntries(formData);
+    const res = await apiPost('simpanAdministrasi', data);
+    btn.disabled = false; btn.innerText = '💾 Simpan Program';
+    showAlert('administrasi', res.message, res.success ? 'success' : 'error');
+    if (res.success) { document.getElementById('formAdministrasi').reset(); loadAdministrasi(); }
+  } catch (err) { btn.disabled = false; showAlert('administrasi', 'Error: ' + err.message, 'error'); }
+}
+
+async function loadAdministrasi() {
+  const filter = { jenisProgram: document.getElementById('filter_admin_jenis').value, status: document.getElementById('filter_admin_status').value };
+  const listContainer = document.getElementById('administrasiList');
+  listContainer.innerHTML = '<div class="loading">⏳ Memuat...</div>';
+  try {
+    const data = await apiGet('getAdministrasi', filter);
+    if (data.length === 0) { listContainer.innerHTML = '<div class="loading">📭 Tidak ada data</div>'; return; }
+    listContainer.innerHTML = data.map(d => {
+      const status = d['STATUS'] || 'Draft';
+      let badgeClass = 'badge-baru';
+      if (status === 'Aktif') badgeClass = 'badge-proses';
+      else if (status === 'Selesai') badgeClass = 'badge-selesai';
+      return '<div class="laporan-item"><div style="display:flex; justify-content:space-between;"><div><div class="laporan-nama">'+(d['JENIS_PROGRAM']||'-')+'</div><div class="laporan-kelas">Periode: '+(d['PERIODE']||'-')+'</div></div><div style="text-align:right;"><div style="font-size:11px; color:#666;">'+(d['ID_PROGRAM']||'-')+'</div><div style="font-size:11px; color:#999;">'+(d['TANGGAL_MULAI']||'-')+'</div></div></div><div class="laporan-detail"><b>Tujuan:</b> '+(d['TUJUAN']||'-')+'</div><div class="laporan-detail"><b>Target:</b> '+(d['TARGET_SASARAN']||'-')+'</div><div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px;"><span class="badge '+badgeClass+'">'+status+'</span><select onchange="updateStatusAdmin(\''+d['ID_PROGRAM']+'\', this.value)" style="padding:4px; font-size:11px; width:auto;"><option value="Draft" '+(status==='Draft'?'selected':'')+'>Draft</option><option value="Aktif" '+(status==='Aktif'?'selected':'')+'>Aktif</option><option value="Selesai" '+(status==='Selesai'?'selected':'')+'>Selesai</option></select></div></div>';
+    }).join('');
+  } catch (e) { console.error(e); }
+}
+
+async function updateStatusAdmin(id, status) {
+  try {
+    const res = await apiPost('updateStatusAdministrasi', { id: id, status: status });
+    if (res.success) { showAlert('administrasi', '✅ Status diupdate!', 'success'); loadAdministrasi(); }
+  } catch (e) { console.error(e); }
+}
+
+async function submitRPL(e) {
+  e.preventDefault();
+  const btn = document.getElementById('btnRPL');
+  btn.disabled = true; btn.innerText = '⏳ Menyimpan...';
+  try {
+    const formData = new FormData(document.getElementById('formRPL'));
+    const data = Object.fromEntries(formData);
+    const res = await apiPost('simpanRPL', data);
+    btn.disabled = false; btn.innerText = '💾 Simpan RPL';
+    showAlert('rpl', res.message, res.success ? 'success' : 'error');
+    if (res.success) { document.getElementById('formRPL').reset(); loadRPL(); }
+  } catch (err) { btn.disabled = false; showAlert('rpl', 'Error: ' + err.message, 'error'); }
+}
+
+async function loadRPL() {
+  const filter = { jenisLayanan: document.getElementById('filter_rpl_jenis').value, kelas: document.getElementById('filter_rpl_kelas').value };
+  const listContainer = document.getElementById('rplList');
+  listContainer.innerHTML = '<div class="loading">⏳ Memuat...</div>';
+  try {
+    const data = await apiGet('getRPL', filter);
+    if (data.length === 0) { listContainer.innerHTML = '<div class="loading">📭 Tidak ada data</div>'; return; }
+    listContainer.innerHTML = data.map(d => '<div class="laporan-item"><div style="display:flex; justify-content:space-between;"><div><div class="laporan-nama">'+(d['TOPIK']||'-')+'</div><div class="laporan-kelas">'+(d['JENIS_LAYANAN']||'-')+' • Kelas: '+(d['KELAS_TARGET']||'-')+'</div></div><div style="text-align:right;"><div style="font-size:11px; color:#666;">'+(d['ID_RPL']||'-')+'</div><div style="font-size:11px; color:#999;">'+(d['TANGGAL']||'-')+'</div></div></div><div class="laporan-detail"><b>Tujuan:</b> '+(d['TUJUAN_LAYANAN']||'-')+'</div><div class="laporan-detail"><b>Materi:</b> '+(d['MATERI']||'-')+'</div><div class="laporan-detail"><b>Metode:</b> '+(d['METODE']||'-')+' • '+(d['WAKTU']||'0')+' menit</div></div>').join('');
+  } catch (e) { console.error(e); }
+}
+
+async function submitJadwal(e) {
+  e.preventDefault();
+  const btn = document.getElementById('btnJadwal');
+  btn.disabled = true; btn.innerText = '⏳ Menyimpan...';
+  try {
+    const formData = new FormData(document.getElementById('formJadwal'));
+    const data = Object.fromEntries(formData);
+    const res = await apiPost('simpanJadwal', data);
+    btn.disabled = false; btn.innerText = '💾 Simpan Jadwal';
+    showAlert('jadwal', res.message, res.success ? 'success' : 'error');
+    if (res.success) { document.getElementById('formJadwal').reset(); loadJadwal(); }
+  } catch (err) { btn.disabled = false; showAlert('jadwal', 'Error: ' + err.message, 'error'); }
+}
+
+async function loadJadwal() {
+  const filter = { tanggal: document.getElementById('filter_jadwal_tanggal').value, kelas: document.getElementById('filter_jadwal_kelas').value };
+  const listContainer = document.getElementById('jadwalList');
+  listContainer.innerHTML = '<div class="loading">⏳ Memuat...</div>';
+  try {
+    const data = await apiGet('getJadwal', filter);
+    if (data.length === 0) { listContainer.innerHTML = '<div class="loading">📭 Tidak ada jadwal</div>'; return; }
+    listContainer.innerHTML = data.map(d => {
+      const status = d['STATUS'] || 'Terjadwal';
+      let badgeClass = 'badge-baru';
+      if (status === 'Selesai') badgeClass = 'badge-selesai';
+      else if (status === 'Dibatalkan') badgeClass = 'badge-rujuk';
+      return '<div class="laporan-item"><div style="display:flex; justify-content:space-between;"><div><div class="laporan-nama">'+(d['TOPIK']||'-')+'</div><div class="laporan-kelas">'+(d['HARI']||'-')+', '+(d['TANGGAL']||'-')+' • '+(d['JAM_MULAI']||'-')+' - '+(d['JAM_SELESAI']||'-')+'</div></div><div style="text-align:right;"><div style="font-size:11px; color:#666;">'+(d['ID_JADWAL']||'-')+'</div><div style="font-size:11px; color:#999;">'+(d['KELAS']||'-')+'</div></div></div><div class="laporan-detail"><b>Jenis:</b> '+(d['JENIS_LAYANAN']||'-')+'</div><div class="laporan-detail"><b>Lokasi:</b> '+(d['LOKASI']||'-')+' • Petugas: '+(d['PETUGAS']||'-')+'</div><div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px;"><span class="badge '+badgeClass+'">'+status+'</span><select onchange="updateStatusJadwal(\''+d['ID_JADWAL']+'\', this.value)" style="padding:4px; font-size:11px; width:auto;"><option value="Terjadwal" '+(status==='Terjadwal'?'selected':'')+'>Terjadwal</option><option value="Selesai" '+(status==='Selesai'?'selected':'')+'>Selesai</option><option value="Dibatalkan" '+(status==='Dibatalkan'?'selected':'')+'>Dibatalkan</option></select></div></div>';
+    }).join('');
+  } catch (e) { console.error(e); }
+}
+
+async function updateStatusJadwal(id, status) {
+  try {
+    const res = await apiPost('updateStatusJadwal', { id: id, status: status });
+    if (res.success) { showAlert('jadwal', '✅ Status diupdate!', 'success'); loadJadwal(); }
+  } catch (e) { console.error(e); }
+}
+
+function cetakDokumen(jenis) {
+  const preview = document.getElementById('cetakPreview');
+  preview.innerHTML = '<div style="padding:20px;"><h3 style="color:#1a73e8;">Preview: ' + jenis + '</h3><p>Dokumen siap dicetak. Klik tombol di bawah untuk mencetak.</p><button class="btn btn-success" onclick="window.print()" style="margin-top:15px;">🖨️ Cetak Sekarang</button></div>';
+}
+
+function showAlert(page, msg, type) {
+  const el = document.getElementById('alert-' + page);
+  if (!el) { alert(msg); return; }
+  el.innerText = msg;
+  el.className = 'alert alert-' + type;
+  el.style.display = 'block';
+  setTimeout(() => el.style.display = 'none', 4000);
+}
+
+// Load dashboard saat pertama kali
+loadDashboard();
+</script>
+</body>
+</html>
