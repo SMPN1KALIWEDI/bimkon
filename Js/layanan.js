@@ -9,7 +9,11 @@ let saranTimer = null;
 let databaseSaranCache = [];
 
 async function loadDatabaseSaran() {
-  try { databaseSaranCache = await apiGet('getDatabaseSaran'); } catch (e) { console.error(e); }
+  try { 
+    databaseSaranCache = await apiGet('getDatabaseSaran');
+    // Pre-load data siswa juga
+    await ensureSiswaData();
+  } catch (e) { console.error(e); }
 }
 
 function cariSaranLokal(deskripsi, kategori) {
