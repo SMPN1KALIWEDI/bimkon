@@ -1,8 +1,3 @@
-// ============================================
-// FILE: js/dashboard.js
-// FUNGSI: Logika Dashboard & Grafik
-// ============================================
-
 async function loadDashboard() {
   try {
     const stats = await apiGet('getDashboardStats');
