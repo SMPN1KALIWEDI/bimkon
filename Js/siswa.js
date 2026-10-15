@@ -1,8 +1,3 @@
-// ============================================
-// FILE: js/siswa.js
-// FUNGSI: Kelola Data Siswa
-// ============================================
-
 async function loadKelas(prefix) {
   const tingkat = document.getElementById(prefix + '_tingkat').value;
   const selKelas = document.getElementById(prefix + '_kelas');
