@@ -1,8 +1,3 @@
-// ============================================
-// FILE: js/api.js
-// FUNGSI: Komunikasi dengan Apps Script API
-// ============================================
-
 const API_URL = 'https://script.google.com/macros/s/AKfycbxMJaZ7GLeA9xH92YQCvan4JWvMxR3GxQ1bxXDQSxsEwCqaXU4LxZpMMedv8LTOAAhqeg/exec';
 
 async function apiGet(action, params = {}) {
