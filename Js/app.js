@@ -7,7 +7,6 @@ function switchPage(page, btn) {
   if (page === 'dashboard') loadDashboard();
   if (page === 'administrasi') {
     loadAdministrasi();
-    // Default ke tab program
     const firstTab = document.querySelector('#page-administrasi .admin-tab');
     if (firstTab) switchAdminTab('program', firstTab);
   }
@@ -22,6 +21,10 @@ function switchPage(page, btn) {
     document.getElementById('filter_tglMulai').value = firstDay.toISOString().split('T')[0];
     document.getElementById('filter_tglAkhir').value = today.toISOString().split('T')[0];
     loadLaporan();
+  }
+  if (page === 'siswa') {
+    // Reset form siswa saat masuk halaman
+    resetSiswaForm();
   }
 }
 
