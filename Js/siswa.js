@@ -1,37 +1,56 @@
 // ============================================
 // FILE: Js/siswa.js
-// FUNGSI: HANYA LENGKAPI DATA SISWA (BUKAN CRUD)
-// NISN = KUNCI PENGAIT (READONLY)
+// FUNGSI: Lengkapi Data Siswa (menggunakan cache GitHub)
 // ============================================
 
+// Load data siswa saat halaman dimuat
+let siswaDataReady = false;
+
+async function ensureSiswaData() {
+  if (!siswaDataReady) {
+    await fetchSiswaData();
+    siswaDataReady = true;
+  }
+}
+
+// ===== POPULATE DROPDOWN DARI CACHE (INSTAN!) =====
 async function loadKelas(prefix) {
+  await ensureSiswaData();
   const tingkat = document.getElementById(prefix + '_tingkat').value;
   const selKelas = document.getElementById(prefix + '_kelas');
   const selNama = document.getElementById(prefix + '_nama');
-  selKelas.innerHTML = '<option value="">Memuat...</option>'; selKelas.disabled = true;
-  selNama.innerHTML = '<option value="">Pilih Kelas dulu</option>'; selNama.disabled = true;
-  if(prefix === 'lay') document.getElementById('lay_selected').style.display = 'none';
-  if (!tingkat) { selKelas.innerHTML = '<option value="">Pilih Kelas</option>'; return; }
-  try {
-    const list = await apiGet('getDaftarKelas', { tingkat: tingkat });
-    selKelas.innerHTML = '<option value="">Pilih Kelas</option>';
-    list.forEach(k => selKelas.innerHTML += '<option value="'+k+'">'+k+'</option>');
-    selKelas.disabled = false;
-  } catch (e) { console.error(e); }
+  
+  selKelas.innerHTML = '<option value="">Pilih Kelas</option>';
+  selKelas.disabled = true;
+  selNama.innerHTML = '<option value="">Pilih Kelas dulu</option>';
+  selNama.disabled = true;
+  
+  if (prefix === 'lay') document.getElementById('lay_selected').style.display = 'none';
+  if (!tingkat) return;
+  
+  const kelasList = _dataCache.kelas[tingkat] || [];
+  kelasList.forEach(k => {
+    selKelas.innerHTML += `<option value="${k}">${k}</option>`;
+  });
+  selKelas.disabled = false;
 }
 
 async function loadSiswa(prefix) {
+  await ensureSiswaData();
   const kelas = document.getElementById(prefix + '_kelas').value;
   const selNama = document.getElementById(prefix + '_nama');
-  selNama.innerHTML = '<option value="">Memuat...</option>'; selNama.disabled = true;
-  if(prefix === 'lay') document.getElementById('lay_selected').style.display = 'none';
-  if (!kelas) { selNama.innerHTML = '<option value="">Pilih Nama Siswa</option>'; return; }
-  try {
-    const list = await apiGet('getSiswaByKelas', { kelas: kelas });
-    selNama.innerHTML = '<option value="">Pilih Nama Siswa</option>';
-    list.forEach(s => selNama.innerHTML += '<option value="'+s.nisn+'" data-nama="'+s.nama+'" data-kelas="'+s.kelas+'">'+s.nama+'</option>');
-    selNama.disabled = false;
-  } catch (e) { console.error(e); }
+  
+  selNama.innerHTML = '<option value="">Pilih Nama Siswa</option>';
+  selNama.disabled = true;
+  
+  if (prefix === 'lay') document.getElementById('lay_selected').style.display = 'none';
+  if (!kelas) return;
+  
+  const siswaList = _dataCache.siswaByKelas[kelas] || [];
+  siswaList.forEach(s => {
+    selNama.innerHTML += `<option value="${s.nisn}" data-nama="${s.nama}" data-kelas="${s.kelas}">${s.nama}</option>`;
+  });
+  selNama.disabled = false;
 }
 
 function selectSiswa(prefix) {
@@ -46,53 +65,43 @@ function selectSiswa(prefix) {
   }
 }
 
-// FUNGSI BARU: Hanya untuk melengkapi data (bukan tambah)
+// ===== LENGKAPI DATA SISWA =====
 async function selectSiswaEdit(prefix) {
   const sel = document.getElementById(prefix + '_nama');
   const opt = sel.options[sel.selectedIndex];
   if (!opt.value) return;
   
-  try {
-    const res = await apiGet('cariSiswaByNISN', { nisn: opt.value });
-    if (res.found) {
-      // Tampilkan form
-      document.getElementById('formSiswa').style.display = 'block';
-      document.getElementById('siswaEmptyState').style.display = 'none';
-      
-      // Isi field READONLY (tidak bisa diubah)
-      document.getElementById('s_nisn').value = res.data.NISN;
-      document.getElementById('s_nama').value = res.data.NAMA;
-      document.getElementById('s_kelas').value = res.data.KLS;
-      
-      // Isi field yang bisa diedit
-      document.getElementById('s_jk').value = res.data.L_P || '';
-      document.getElementById('s_status').value = res.data.STATUS || 'Aktif';
-      document.getElementById('s_hp1').value = res.data.NO_SISWA || '';
-      document.getElementById('s_hp2').value = res.data.NO_ORTU || '';
-      document.getElementById('s_alamat').value = res.data.ALAMAT || '';
-      
-      // Scroll ke form
-      document.getElementById('formSiswa').scrollIntoView({ behavior: 'smooth', block: 'start' });
-      
-      showAlert('siswa', '✅ Data siswa dimuat. Silakan lengkapi yang masih kosong.', 'success');
-    } else {
-      showAlert('siswa', '❌ Siswa tidak ditemukan!', 'error');
-    }
-  } catch (e) { 
-    console.error(e);
-    showAlert('siswa', 'Error: ' + e.message, 'error');
-  }
-}
-
-// FUNGSI BARU: Hanya update, tidak ada tambah
-async function submitSiswa(e) {
-  e.preventDefault();
-  
-  const nisn = document.getElementById('s_nisn').value;
-  if (!nisn) {
-    showAlert('siswa', '⚠️ NISN tidak valid!', 'error');
+  // Ambil dari cache (INSTAN, tanpa API call!)
+  const siswa = cariSiswaFromCache(opt.value);
+  if (!siswa) {
+    showAlert('siswa', '❌ Siswa tidak ditemukan!', 'error');
     return;
   }
+  
+  // Tampilkan form
+  document.getElementById('formSiswa').style.display = 'block';
+  document.getElementById('siswaEmptyState').style.display = 'none';
+  
+  // Isi field READONLY
+  document.getElementById('s_nisn').value = siswa.nisn;
+  document.getElementById('s_nama').value = siswa.nama;
+  document.getElementById('s_kelas').value = siswa.kelas;
+  
+  // Isi field yang bisa diedit
+  document.getElementById('s_jk').value = siswa.jk || '';
+  document.getElementById('s_status').value = siswa.status || 'Aktif';
+  document.getElementById('s_hp1').value = siswa.no_hp || '';
+  document.getElementById('s_hp2').value = siswa.no_ortu || '';
+  document.getElementById('s_alamat').value = siswa.alamat || '';
+  
+  document.getElementById('formSiswa').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  showAlert('siswa', '✅ Data dimuat. Silakan lengkapi yang kosong.', 'success');
+}
+
+async function submitSiswa(e) {
+  e.preventDefault();
+  const nisn = document.getElementById('s_nisn').value;
+  if (!nisn) { showAlert('siswa', '⚠️ NISN tidak valid!', 'error'); return; }
   
   const btn = document.getElementById('btnSiswa');
   btn.disabled = true; btn.innerText = '⏳ Menyimpan...';
@@ -100,8 +109,6 @@ async function submitSiswa(e) {
   try {
     const formData = new FormData(document.getElementById('formSiswa'));
     const data = Object.fromEntries(formData);
-    
-    // PAKSA mode = update (tidak ada tambah)
     const res = await apiPost('updateSiswa', data);
     
     btn.disabled = false;
@@ -109,26 +116,29 @@ async function submitSiswa(e) {
     showAlert('siswa', res.message, res.success ? 'success' : 'error');
     
     if (res.success) {
-      // Tetap tampilkan form untuk edit lanjutan
-      setTimeout(() => {
-        showAlert('siswa', '✅ Data berhasil diperbarui!', 'success');
-      }, 1500);
+      // Update cache lokal agar data terbaru
+      const idx = _dataCache.siswa.findIndex(s => s.nisn === nisn);
+      if (idx !== -1) {
+        _dataCache.siswa[idx].jk = data.jenisKelamin;
+        _dataCache.siswa[idx].status = data.status;
+        _dataCache.siswa[idx].no_hp = data.noHpSiswa;
+        _dataCache.siswa[idx].no_ortu = data.noHpOrtu;
+        _dataCache.siswa[idx].alamat = data.alamat;
+        try { localStorage.setItem('bk_siswa_cache', JSON.stringify(_dataCache)); } catch(e){}
+      }
     }
-  } catch (err) { 
+  } catch (err) {
     btn.disabled = false;
     btn.innerText = '💾 Simpan Perubahan';
-    showAlert('siswa', 'Error: ' + err.message, 'error'); 
+    showAlert('siswa', 'Error: ' + err.message, 'error');
   }
 }
 
 function resetSiswaForm() {
-  // Sembunyikan form, tampilkan empty state
   document.getElementById('formSiswa').style.display = 'none';
   document.getElementById('siswaEmptyState').style.display = 'block';
   document.getElementById('formSiswa').reset();
   document.getElementById('alert-siswa').style.display = 'none';
-  
-  // Reset dropdown pencarian
   document.getElementById('siswa_tingkat').value = '';
   document.getElementById('siswa_kelas').innerHTML = '<option value="">Pilih Kelas</option>';
   document.getElementById('siswa_kelas').disabled = true;
