@@ -1,8 +1,3 @@
-// ============================================
-// FILE: js/layanan.js
-// FUNGSI: Input Layanan + Saran AI
-// ============================================
-
 let saranTimer = null;
 let databaseSaranCache = [];
 
