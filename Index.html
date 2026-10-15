@@ -103,7 +103,7 @@
   <!-- INPUT LAYANAN -->
   <div id="page-layanan" class="page">
     <div class="card">
-      <div class="card-title"> Input Layanan Konseling</div>
+      <div class="card-title">📝 Input Layanan Konseling</div>
       <form id="formLayanan" onsubmit="submitLayanan(event)">
         <div class="search-box">
           <label>🔍 Cari Siswa</label>
@@ -226,7 +226,7 @@
   <!-- JADWAL BK -->
   <div id="page-jadwal" class="page">
     <div class="card">
-      <div class="card-title"> Tambah Jadwal BK</div>
+      <div class="card-title">📅 Tambah Jadwal BK</div>
       <form id="formJadwal" onsubmit="submitJadwal(event)">
         <div class="row">
           <div class="col form-group"><label>Tanggal *</label><input type="date" name="tanggal" required></div>
@@ -243,7 +243,7 @@
         </div>
         <div class="form-group"><label>Nama Petugas BK *</label><input type="text" name="petugas" required></div>
         <div class="form-group"><label>Catatan</label><textarea name="catatan" rows="2"></textarea></div>
-        <button type="submit" class="btn btn-success" id="btnJadwal"> Simpan Jadwal</button>
+        <button type="submit" class="btn btn-success" id="btnJadwal">💾 Simpan Jadwal</button>
       </form>
       <div id="alert-jadwal" class="alert"></div>
     </div>
@@ -261,7 +261,7 @@
   <!-- LAPORAN -->
   <div id="page-laporan" class="page">
     <div class="card no-print">
-      <div class="card-title"> Filter Laporan</div>
+      <div class="card-title">📋 Filter Laporan</div>
       <div class="row">
         <div class="col form-group"><label>Tanggal Mulai</label><input type="date" id="filter_tglMulai"></div>
         <div class="col form-group"><label>Tanggal Akhir</label><input type="date" id="filter_tglAkhir"></div>
@@ -276,7 +276,7 @@
       <button class="btn btn-success" style="margin:0;" onclick="window.print()">🖨️ Cetak / PDF</button>
     </div>
     <div id="laporanSummary" class="card" style="display:none;">
-      <div class="card-title"> Ringkasan</div>
+      <div class="card-title">📊 Ringkasan</div>
       <div class="stats-grid">
         <div class="stat-card"><div class="stat-number" id="r_total">0</div><div class="stat-label">Total Data</div></div>
         <div class="stat-card green"><div class="stat-number" id="r_selesai">0</div><div class="stat-label">Selesai</div></div>
@@ -290,10 +290,10 @@
   <!-- CETAK DOKUMEN -->
   <div id="page-cetak" class="page">
     <div class="card">
-      <div class="card-title">️ Cetak Dokumen BK</div>
+      <div class="card-title">🖨️ Cetak Dokumen BK</div>
       <p style="font-size:13px; color:#666; margin-bottom:15px;">Pilih jenis dokumen yang ingin dicetak:</p>
       <div class="stats-grid">
-        <button class="btn btn-success" onclick="cetakDokumen('Laporan Layanan BK')"> Laporan Layanan</button>
+        <button class="btn btn-success" onclick="cetakDokumen('Laporan Layanan BK')">📋 Laporan Layanan</button>
         <button class="btn btn-warning" onclick="cetakDokumen('Administrasi BK')">📊 Administrasi BK</button>
         <button class="btn" onclick="cetakDokumen('RPL BK')">📝 RPL BK</button>
         <button class="btn btn-secondary" onclick="cetakDokumen('Jadwal BK')">📅 Jadwal BK</button>
@@ -321,8 +321,8 @@
 </div>
 
 <script>
-// ⚠️ GANTI URL INI DENGAN URL APPS SCRIPT ANDA
-const API_URL = 'URL_API_ANDA_DI_SINI';
+// ✅ URL API ANDA SUDAH DIPASANG DI SINI
+const API_URL = 'https://script.google.com/macros/s/AKfycbxMJaZ7GLeA9xH92YQCvan4JWvMxR3GxQ1bxXDQSxsEwCqaXU4LxZpMMedv8LTOAAhqeg/exec';
 
 // Helper functions untuk API call
 async function apiGet(action, params = {}) {
@@ -333,13 +333,12 @@ async function apiGet(action, params = {}) {
 }
 
 async function apiPost(action, data = {}) {
-  const response = await fetch(API_URL + '?action=' + action, {
+  await fetch(API_URL + '?action=' + action, {
     method: 'POST',
     mode: 'no-cors',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data)
   });
-  // Karena no-cors, response tidak bisa dibaca, tapi data tetap terkirim
   return { success: true, message: 'Data berhasil dikirim!' };
 }
 
@@ -373,9 +372,7 @@ async function loadDashboard() {
     document.getElementById('d_totalLayanan').innerText = stats.layanan.total;
     document.getElementById('d_bulanIni').innerText = stats.layanan.bulanIni;
     renderChart('chartJenis', stats.layanan.jenis, stats.layanan.total);
-  } catch (e) {
-    console.error('Error loading dashboard:', e);
-  }
+  } catch (e) { console.error('Error loading dashboard:', e); }
 }
 
 function renderChart(containerId, data, total) {
@@ -397,7 +394,6 @@ async function loadKelas(prefix) {
   selNama.innerHTML = '<option value="">Pilih Kelas dulu</option>'; selNama.disabled = true;
   if(prefix === 'lay') document.getElementById('lay_selected').style.display = 'none';
   if (!tingkat) { selKelas.innerHTML = '<option value="">Pilih Kelas</option>'; return; }
-  
   try {
     const list = await apiGet('getDaftarKelas', { tingkat: tingkat });
     selKelas.innerHTML = '<option value="">Pilih Kelas</option>';
@@ -412,7 +408,6 @@ async function loadSiswa(prefix) {
   selNama.innerHTML = '<option value="">Memuat...</option>'; selNama.disabled = true;
   if(prefix === 'lay') document.getElementById('lay_selected').style.display = 'none';
   if (!kelas) { selNama.innerHTML = '<option value="">Pilih Nama Siswa</option>'; return; }
-  
   try {
     const list = await apiGet('getSiswaByKelas', { kelas: kelas });
     selNama.innerHTML = '<option value="">Pilih Nama Siswa</option>';
@@ -464,7 +459,6 @@ async function submitLayanan(e) {
   if (!document.getElementById('lay_nisn').value) { showAlert('layanan', '⚠️ Pilih siswa terlebih dahulu!', 'error'); return; }
   const btn = document.getElementById('btnLayanan');
   btn.disabled = true; btn.innerText = '⏳ Menyimpan...';
-  
   try {
     const formData = new FormData(document.getElementById('formLayanan'));
     const data = Object.fromEntries(formData);
@@ -488,13 +482,12 @@ async function submitSiswa(e) {
   const mode = document.getElementById('siswa_mode').value;
   const btn = document.getElementById('btnSiswa');
   btn.disabled = true; btn.innerText = '⏳ Menyimpan...';
-  
   try {
     const formData = new FormData(document.getElementById('formSiswa'));
     const data = Object.fromEntries(formData);
     const res = await apiPost(mode === 'edit' ? 'updateSiswa' : 'tambahSiswa', data);
     btn.disabled = false;
-    btn.innerText = mode === 'edit' ? '💾 Update Data' : ' Tambah Siswa';
+    btn.innerText = mode === 'edit' ? '💾 Update Data' : '➕ Tambah Siswa';
     showAlert('siswa', res.message, res.success ? 'success' : 'error');
     if (res.success && mode === 'tambah') document.getElementById('formSiswa').reset();
   } catch (err) {
@@ -521,7 +514,6 @@ async function loadLaporan() {
   };
   const listContainer = document.getElementById('laporanList');
   listContainer.innerHTML = '<div class="loading">⏳ Memuat...</div>';
-  
   try {
     const data = await apiGet('getLaporanLayanan', filter);
     if (data.length === 0) { listContainer.innerHTML = '<div class="loading">📭 Tidak ada data</div>'; document.getElementById('laporanSummary').style.display = 'none'; return; }
