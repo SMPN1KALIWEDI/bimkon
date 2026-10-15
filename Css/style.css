@@ -1,8 +1,3 @@
-/* ============================================
-   FILE: css/style.css
-   FUNGSI: Semua styling aplikasi
-   ============================================ */
-
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f4f6f9; margin: 0; padding: 0; }
 .app-header { background: linear-gradient(135deg, #1a73e8 0%, #0d47a1 100%); color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100; }
@@ -55,21 +50,15 @@ input, select, textarea { width: 100%; padding: 10px; border: 1px solid #ddd; bo
 .badge-selesai { background: #d4edda; color: #155724; }
 .badge-rujuk { background: #f8d7da; color: #721c24; }
 .loading { text-align: center; padding: 20px; color: #999; }
-
-/* Template Cards */
 .template-card { background: white; border: 2px solid #e9ecef; border-radius: 12px; padding: 15px; margin-bottom: 10px; cursor: pointer; transition: all 0.2s; }
 .template-card:hover { border-color: #1a73e8; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(26,115,232,0.15); }
 .template-icon { font-size: 32px; margin-bottom: 8px; }
 .template-name { font-weight: bold; color: #1a73e8; font-size: 15px; margin-bottom: 5px; }
 .template-desc { font-size: 12px; color: #666; line-height: 1.4; }
 .template-tag { display: inline-block; background: #e7f1ff; color: #1a73e8; padding: 3px 8px; border-radius: 10px; font-size: 10px; margin-top: 8px; }
-
-/* Import Section */
 .import-box { background: #fff8e1; border: 2px dashed #ffc107; border-radius: 12px; padding: 20px; text-align: center; margin-bottom: 15px; }
 .import-box h3 { margin: 0 0 10px 0; color: #856404; }
 .import-box p { margin: 0 0 15px 0; color: #666; font-size: 13px; }
-
-/* Saran AI Panel */
 .saran-ai-panel { background: linear-gradient(135deg, #fff8e1 0%, #ffecb3 100%); border: 2px solid #ffc107; border-radius: 12px; padding: 15px; margin-top: 15px; display: none; }
 .saran-ai-panel.show { display: block; animation: slideDown 0.3s; }
 @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
@@ -84,15 +73,12 @@ input, select, textarea { width: 100%; padding: 10px; border: 1px solid #ddd; bo
 .btn-terapkan { background: #28a745; color: white; padding: 6px 12px; border: none; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: bold; margin-top: 8px; }
 .saran-empty { text-align: center; padding: 15px; color: #666; font-size: 13px; }
 .ai-badge { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 2px 8px; border-radius: 10px; font-size: 9px; font-weight: bold; }
-
-/* Modal */
 .modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
 .modal.show { display: flex; }
 .modal-content { background: white; border-radius: 12px; padding: 20px; max-width: 600px; width: 100%; max-height: 90vh; overflow-y: auto; }
 .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #e9ecef; }
 .modal-title { font-size: 18px; font-weight: bold; color: #1a73e8; margin: 0; }
 .modal-close { background: none; border: none; font-size: 24px; cursor: pointer; color: #666; }
-
 @media print {
   .app-header, .bottom-nav, .btn, .no-print { display: none !important; }
   .page { padding-bottom: 0; display: block !important; }
