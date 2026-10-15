@@ -1,3 +1,10 @@
+// Pastikan data siswa sudah dimuat saat halaman layanan dibuka
+async function ensureSiswaDataForLayanan() {
+  if (!siswaDataReady) {
+    await fetchSiswaData();
+    siswaDataReady = true;
+  }
+}
 let saranTimer = null;
 let databaseSaranCache = [];
 
