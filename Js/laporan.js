@@ -27,7 +27,28 @@ async function changeStatus(id, statusBaru) {
   try { const res = await apiPost('updateStatusLayanan', { id: id, status: statusBaru }); if (res.success) { showAlert('laporan', '✅ Status diupdate!', 'success'); loadLaporan(); } } catch (e) { console.error(e); }
 }
 
-function cetakDokumen(jenis) {
-  const preview = document.getElementById('cetakPreview');
-  preview.innerHTML = '<div style="padding:20px;"><h3 style="color:#1a73e8;">Preview: ' + jenis + '</h3><p>Dokumen siap dicetak.</p><button class="btn btn-success" onclick="window.print()" style="margin-top:15px;">🖨️ Cetak Sekarang</button></div>';
+function exportCSV() {
+  const items = document.querySelectorAll('#laporanList .laporan-item');
+  if (items.length === 0) { alert('Tidak ada data untuk diexport!'); return; }
+  let csv = 'ID,Tanggal,NISN,Nama,Kelas,Jenis Layanan,Kategori,Deskripsi,Tindak Lanjut,Status\n';
+  items.forEach(item => {
+    const nama = item.querySelector('.laporan-nama')?.innerText || '-';
+    const kelasInfo = item.querySelector('.laporan-kelas')?.innerText || '';
+    const kelas = kelasInfo.split('|')[0].replace('Kelas:','').trim();
+    const nisn = kelasInfo.split('NISN:')[1]?.trim() || '-';
+    const id = item.querySelector('div[style*="font-size:11px"]')?.innerText || '-';
+    const tgl = item.querySelectorAll('div[style*="font-size:11px"]')[1]?.innerText || '-';
+    const details = item.querySelectorAll('.laporan-detail');
+    const jenisKat = details[0]?.innerText || '-';
+    const masalah = details[1]?.innerText.replace('Masalah:','').trim() || '-';
+    const tl = details[2]?.innerText.replace('Tindak Lanjut:','').trim() || '-';
+    const status = item.querySelector('.badge')?.innerText || '-';
+    csv += `"${id}","${tgl}","${nisn}","${nama}","${kelas}","${jenisKat}","${masalah}","${tl}","${status}"\n`;
+  });
+  const blob = new Blob([csv], {type: 'text/csv'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'Laporan_BK_' + new Date().toISOString().split('T')[0] + '.csv';
+  a.click();
 }
