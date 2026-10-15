@@ -1,8 +1,3 @@
-// ============================================
-// FILE: js/laporan.js
-// FUNGSI: Laporan & Cetak Dokumen
-// ============================================
-
 async function loadLaporan() {
   const filter = { tanggalMulai: document.getElementById('filter_tglMulai').value, tanggalAkhir: document.getElementById('filter_tglAkhir').value, kelas: document.getElementById('filter_kelas').value, jenisLayanan: document.getElementById('filter_jenis').value };
   const listContainer = document.getElementById('laporanList');
