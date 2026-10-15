@@ -73,33 +73,101 @@
     </div>
   </div>
 
-  <!-- DATA SISWA -->
+    <!-- DATA SISWA (HANYA LENGKAPI, BUKAN TAMBAH/HAPUS) -->
   <div id="page-siswa" class="page">
     <div class="card">
-      <div class="card-title">👥 Kelola Data Siswa</div>
-      <form id="formSiswa" onsubmit="submitSiswa(event)">
-        <input type="hidden" id="siswa_mode" value="tambah">
-        <div class="search-box">
-          <label>🔍 Cari Siswa untuk Diedit</label>
-          <div class="row">
-            <div class="col"><select id="siswa_tingkat" onchange="loadKelas('siswa')"><option value="">Pilih Tingkat</option><option value="7">Kelas 7</option><option value="8">Kelas 8</option><option value="9">Kelas 9</option></select></div>
-            <div class="col"><select id="siswa_kelas" onchange="loadSiswa('siswa')" disabled><option value="">Pilih Kelas</option></select></div>
-          </div>
-          <div style="margin-top:10px;"><select id="siswa_nama" onchange="selectSiswaEdit('siswa')" disabled><option value="">Pilih Nama Siswa</option></select></div>
+      <div class="card-title">👥 Lengkapi Data Siswa</div>
+      
+      <!-- Info Penting -->
+      <div style="background:#e7f1ff; border-left:4px solid #1a73e8; padding:12px; border-radius:8px; margin-bottom:15px; font-size:13px; color:#333;">
+        <strong>ℹ️ Informasi:</strong><br>
+        • Data siswa bersumber dari data sekolah (Dapodik/EMIS)<br>
+        • Aplikasi ini hanya untuk <b>melengkapi data</b> yang belum terisi<br>
+        • <b>NISN adalah kunci pengait</b> - tidak dapat diubah<br>
+        • Gunakan filter di bawah untuk mencari siswa
+      </div>
+
+      <!-- Pencarian Siswa -->
+      <div class="search-box">
+        <label>🔍 Cari Siswa untuk Dilengkapi Datanya</label>
+        <div class="row">
+          <div class="col"><select id="siswa_tingkat" onchange="loadKelas('siswa')"><option value="">Pilih Tingkat</option><option value="7">Kelas 7</option><option value="8">Kelas 8</option><option value="9">Kelas 9</option></select></div>
+          <div class="col"><select id="siswa_kelas" onchange="loadSiswa('siswa')" disabled><option value="">Pilih Kelas</option></select></div>
         </div>
-        <div class="row"><div class="col form-group"><label>NISN *</label><input type="text" id="s_nisn" name="nisn" required></div><div class="col form-group"><label>Kelas *</label><input type="text" id="s_kelas" name="kelas" required></div></div>
-        <div class="form-group"><label>Nama Lengkap *</label><input type="text" id="s_nama" name="nama" required></div>
-        <div class="row"><div class="col form-group"><label>Jenis Kelamin</label><select id="s_jk" name="jenisKelamin"><option value="">--</option><option value="L">Laki-laki</option><option value="P">Perempuan</option></select></div><div class="col form-group"><label>Status</label><select id="s_status" name="status"><option value="Aktif">Aktif</option><option value="Pindah">Pindah</option><option value="Lulus">Lulus</option></select></div></div>
-        <div class="form-group"><label>No. HP Siswa</label><input type="tel" id="s_hp1" name="noHpSiswa"></div>
-        <div class="form-group"><label>No. HP Orang Tua *</label><input type="tel" id="s_hp2" name="noHpOrtu" required></div>
-        <div class="form-group"><label>Alamat</label><textarea id="s_alamat" name="alamat" rows="2"></textarea></div>
-        <button type="submit" class="btn btn-success" id="btnSiswa">➕ Tambah Siswa</button>
-        <button type="button" class="btn btn-warning" id="btnReset" style="display:none;" onclick="resetSiswaForm()">Batal Edit</button>
+        <div style="margin-top:10px;"><select id="siswa_nama" onchange="selectSiswaEdit('siswa')" disabled><option value="">Pilih Nama Siswa</option></select></div>
+      </div>
+
+      <!-- Form Lengkapi Data (NISN readonly) -->
+      <form id="formSiswa" onsubmit="submitSiswa(event)" style="display:none;">
+        <input type="hidden" id="siswa_mode" value="lengkapi">
+        
+        <div class="row">
+          <div class="col form-group">
+            <label>NISN (Kunci Pengait)</label>
+            <input type="text" id="s_nisn" name="nisn" readonly style="background:#f0f0f0; color:#666;">
+          </div>
+          <div class="col form-group">
+            <label>Kelas</label>
+            <input type="text" id="s_kelas" name="kelas" readonly style="background:#f0f0f0; color:#666;">
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label>Nama Lengkap</label>
+          <input type="text" id="s_nama" name="nama" readonly style="background:#f0f0f0; color:#666;">
+        </div>
+
+        <div style="background:#fff8e1; border:1px solid #ffc107; border-radius:8px; padding:10px; margin:15px 0; font-size:12px; color:#856404;">
+          <strong>️ Data yang bisa dilengkapi:</strong> Jenis Kelamin, No. HP, Alamat, Status
+        </div>
+
+        <div class="row">
+          <div class="col form-group">
+            <label>Jenis Kelamin</label>
+            <select id="s_jk" name="jenisKelamin">
+              <option value="">-- Belum diisi --</option>
+              <option value="L">Laki-laki</option>
+              <option value="P">Perempuan</option>
+            </select>
+          </div>
+          <div class="col form-group">
+            <label>Status</label>
+            <select id="s_status" name="status">
+              <option value="Aktif">Aktif</option>
+              <option value="Pindah">Pindah</option>
+              <option value="Lulus">Lulus</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label>No. HP Siswa</label>
+          <input type="tel" id="s_hp1" name="noHpSiswa" placeholder="Nomor WhatsApp siswa (opsional)">
+        </div>
+        
+        <div class="form-group">
+          <label>No. HP Orang Tua *</label>
+          <input type="tel" id="s_hp2" name="noHpOrtu" required placeholder="Wajib diisi untuk kontak darurat">
+        </div>
+        
+        <div class="form-group">
+          <label>Alamat</label>
+          <textarea id="s_alamat" name="alamat" rows="2" placeholder="Alamat lengkap siswa"></textarea>
+        </div>
+        
+        <button type="submit" class="btn btn-success" id="btnSiswa">💾 Simpan Perubahan</button>
+        <button type="button" class="btn btn-secondary" onclick="resetSiswaForm()">🔄 Reset / Cari Siswa Lain</button>
       </form>
+
+      <!-- Status Kosong -->
+      <div id="siswaEmptyState" style="text-align:center; padding:30px; color:#999;">
+        <div style="font-size:48px; margin-bottom:10px;">👆</div>
+        <p>Pilih siswa dari filter di atas untuk melengkapi datanya</p>
+      </div>
+
       <div id="alert-siswa" class="alert"></div>
     </div>
   </div>
-
   <!-- ADMINISTRASI BK (dengan Template digabung) -->
   <div id="page-administrasi" class="page">
     <!-- Tab Internal Admin -->
