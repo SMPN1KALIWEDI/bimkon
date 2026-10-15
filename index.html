@@ -6,7 +6,24 @@
 <meta name="theme-color" content="#1a73e8">
 <title>Aplikasi BK SMP</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%231a73e8'/><text x='50' y='65' font-size='50' text-anchor='middle' fill='white' font-family='Arial'>BK</text></svg>">
-<style>
+  /* Panel Saran AI */
+  .saran-ai-panel { background: linear-gradient(135deg, #fff8e1 0%, #ffecb3 100%); border: 2px solid #ffc107; border-radius: 12px; padding: 15px; margin-top: 15px; display: none; }
+  .saran-ai-panel.show { display: block; animation: slideDown 0.3s; }
+  @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+  .saran-ai-title { font-weight: bold; color: #856404; font-size: 14px; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+  .saran-item { background: white; border-radius: 8px; padding: 12px; margin-bottom: 10px; border-left: 4px solid #ffc107; }
+  .saran-item-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+  .saran-score { background: #ffc107; color: #000; padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: bold; }
+  .saran-kategori { background: #e7f1ff; color: #1a73e8; padding: 2px 8px; border-radius: 10px; font-size: 10px; }
+  .saran-text { font-size: 13px; color: #333; line-height: 1.5; white-space: pre-line; }
+  .saran-keywords { font-size: 11px; color: #666; margin-top: 6px; }
+  .saran-keywords span { background: #f0f0f0; padding: 2px 6px; border-radius: 4px; margin-right: 4px; display: inline-block; }
+  .btn-terapkan { background: #28a745; color: white; padding: 6px 12px; border: none; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: bold; margin-top: 8px; }
+  .btn-terapkan:hover { background: #218838; }
+  .saran-loading { text-align: center; padding: 15px; color: #856404; }
+  .saran-empty { text-align: center; padding: 15px; color: #666; font-size: 13px; }
+  .ai-badge { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 2px 8px; border-radius: 10px; font-size: 9px; font-weight: bold; }
+ <style>
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f4f6f9; margin: 0; padding: 0; }
   .app-header { background: linear-gradient(135deg, #1a73e8 0%, #0d47a1 100%); color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100; }
