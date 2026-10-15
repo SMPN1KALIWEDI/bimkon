@@ -6,7 +6,6 @@
 <meta name="theme-color" content="#1a73e8">
 <title>Aplikasi BK SMP</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%231a73e8'/><text x='50' y='65' font-size='50' text-anchor='middle' fill='white' font-family='Arial'>BK</text></svg>">
-<!-- PERHATIAN: Huruf C kapital pada Css -->
 <link rel="stylesheet" href="Css/style.css">
 </head>
 <body>
@@ -63,9 +62,8 @@
         <div class="form-group"><label>Tindak Lanjut</label><textarea name="tindakLanjut" rows="3" required></textarea></div>
         <div class="form-group"><label>Nama Petugas BK</label><input type="text" name="petugas" required></div>
         
-        <!-- Panel Saran AI -->
         <div id="saranAiPanel" class="saran-ai-panel">
-          <div class="saran-ai-title">💡 Saran AI (Rule-Based) <span class="ai-badge">LOCAL AI</span></div>
+          <div class="saran-ai-title">💡 Saran AI <span class="ai-badge">LOCAL AI</span></div>
           <div id="saranAiContent"><div class="saran-empty">Ketik deskripsi masalah, saran muncul otomatis.</div></div>
         </div>
         
@@ -102,82 +100,96 @@
     </div>
   </div>
 
-  <!-- ADMINISTRASI BK -->
+  <!-- ADMINISTRASI BK (dengan Template digabung) -->
   <div id="page-administrasi" class="page">
-    <div class="card">
-      <div class="card-title">📋 Tambah Program Administrasi BK</div>
-      <form id="formAdministrasi" onsubmit="submitAdministrasi(event)">
-        <div class="row">
-          <div class="col form-group"><label>Jenis Program *</label><select name="jenisProgram" required><option value="">-- Pilih --</option><option>Program Tahunan</option><option>Program Semester</option><option>Program Bulanan</option><option>Program Mingguan</option></select></div>
-          <div class="col form-group"><label>Periode *</label><input type="text" name="periode" required></div>
-        </div>
-        <div class="row">
-          <div class="col form-group"><label>Tanggal Mulai *</label><input type="date" name="tanggalMulai" required></div>
-          <div class="col form-group"><label>Tanggal Selesai *</label><input type="date" name="tanggalSelesai" required></div>
-        </div>
-        <div class="form-group"><label>Tujuan Program *</label><textarea name="tujuan" rows="2" required></textarea></div>
-        <div class="form-group"><label>Deskripsi Program *</label><textarea name="deskripsi" rows="3" required></textarea></div>
-        <div class="form-group"><label>Target Sasaran *</label><input type="text" name="targetSasaran" required></div>
-        <div class="form-group"><label>Metode Pelaksanaan *</label><input type="text" name="metode" required></div>
-        <div class="form-group"><label>Evaluasi</label><textarea name="evaluasi" rows="2"></textarea></div>
-        <div class="form-group"><label>Nama Petugas BK *</label><input type="text" name="petugas" required></div>
-        <button type="submit" class="btn btn-success" id="btnAdministrasi">💾 Simpan Program</button>
-      </form>
-      <div id="alert-administrasi" class="alert"></div>
+    <!-- Tab Internal Admin -->
+    <div class="admin-tabs">
+      <button class="admin-tab active" onclick="switchAdminTab('program', this)">📋 Program</button>
+      <button class="admin-tab" onclick="switchAdminTab('template', this)">📚 Template</button>
+      <button class="admin-tab" onclick="switchAdminTab('import', this)"> Import</button>
     </div>
-    <div class="card no-print">
-      <div class="card-title">📊 Daftar Program</div>
-      <div class="row">
-        <div class="col form-group"><label>Filter Jenis</label><select id="filter_admin_jenis" onchange="loadAdministrasi()"><option value="">Semua</option><option>Program Tahunan</option><option>Program Semester</option><option>Program Bulanan</option><option>Program Mingguan</option></select></div>
-        <div class="col form-group"><label>Filter Status</label><select id="filter_admin_status" onchange="loadAdministrasi()"><option value="">Semua</option><option>Draft</option><option>Aktif</option><option>Selesai</option></select></div>
+
+    <!-- Tab 1: Program -->
+    <div id="admin-tab-program" class="admin-tab-content">
+      <div class="card">
+        <div class="card-title"> Tambah Program Baru</div>
+        <form id="formAdministrasi" onsubmit="submitAdministrasi(event)">
+          <div class="row">
+            <div class="col form-group"><label>Jenis Program *</label><select name="jenisProgram" required><option value="">-- Pilih --</option><option>Program Tahunan</option><option>Program Semester</option><option>Program Bulanan</option><option>Program Mingguan</option></select></div>
+            <div class="col form-group"><label>Periode *</label><input type="text" name="periode" required placeholder="Cth: 2025/2026"></div>
+          </div>
+          <div class="row">
+            <div class="col form-group"><label>Tanggal Mulai *</label><input type="date" name="tanggalMulai" required></div>
+            <div class="col form-group"><label>Tanggal Selesai *</label><input type="date" name="tanggalSelesai" required></div>
+          </div>
+          <div class="form-group"><label>Tujuan Program *</label><textarea name="tujuan" rows="2" required></textarea></div>
+          <div class="form-group"><label>Deskripsi Program *</label><textarea name="deskripsi" rows="3" required></textarea></div>
+          <div class="form-group"><label>Target Sasaran *</label><input type="text" name="targetSasaran" required></div>
+          <div class="form-group"><label>Metode Pelaksanaan *</label><input type="text" name="metode" required></div>
+          <div class="form-group"><label>Evaluasi</label><textarea name="evaluasi" rows="2"></textarea></div>
+          <div class="form-group"><label>Nama Petugas BK *</label><input type="text" name="petugas" required></div>
+          <button type="submit" class="btn btn-success" id="btnAdministrasi">💾 Simpan Program</button>
+        </form>
+        <div id="alert-administrasi" class="alert"></div>
       </div>
-      <button class="btn" onclick="loadAdministrasi()">🔄 Refresh</button>
+
+      <div class="card no-print">
+        <div class="card-title">📊 Daftar Program</div>
+        <div class="row">
+          <div class="col form-group"><label>Filter Jenis</label><select id="filter_admin_jenis" onchange="loadAdministrasi()"><option value="">Semua</option><option>Program Tahunan</option><option>Program Semester</option><option>Program Bulanan</option><option>Program Mingguan</option></select></div>
+          <div class="col form-group"><label>Filter Status</label><select id="filter_admin_status" onchange="loadAdministrasi()"><option value="">Semua</option><option>Draft</option><option>Aktif</option><option>Selesai</option></select></div>
+        </div>
+        <button class="btn" onclick="loadAdministrasi()"> Refresh</button>
+      </div>
+      <div id="administrasiList"></div>
     </div>
-    <div id="administrasiList"></div>
+
+    <!-- Tab 2: Template -->
+    <div id="admin-tab-template" class="admin-tab-content" style="display:none;">
+      <div class="card">
+        <div class="card-title">📚 Template Administrasi BK</div>
+        <p style="font-size:13px; color:#666; margin-bottom:15px;">Pilih template, edit sesuai kebutuhan sekolah, lalu simpan ke Administrasi.</p>
+        <div id="templateList"></div>
+      </div>
+    </div>
+
+    <!-- Tab 3: Import -->
+    <div id="admin-tab-import" class="admin-tab-content" style="display:none;">
+      <div class="card">
+        <div class="card-title">🌐 Import dari URL Web Lain</div>
+        <div class="import-box">
+          <h3>Ambil Data dari Website</h3>
+          <p>Masukkan URL Google Docs yang di-publish atau URL JSON/CSV</p>
+          <input type="url" id="importUrl" placeholder="https://docs.google.com/..." style="margin-bottom:10px;">
+          <button class="btn btn-info" onclick="importFromUrl()">🌐 Ambil dari URL</button>
+        </div>
+        <div id="importUrlResult"></div>
+      </div>
+      <div class="card">
+        <div class="card-title">📁 Import dari File</div>
+        <div class="import-box">
+          <h3>Upload File CSV/JSON</h3>
+          <p>Upload file administrasi dari komputer Anda</p>
+          <input type="file" id="importFile" accept=".csv,.json" style="margin-bottom:10px;">
+          <button class="btn btn-warning" onclick="importFromFile()">📁 Import File</button>
+        </div>
+        <div id="importFileResult"></div>
+      </div>
+    </div>
   </div>
 
-  <!-- TEMPLATE & IMPORT -->
-  <div id="page-template" class="page">
-    <div class="card">
-      <div class="card-title">📚 Template Administrasi BK</div>
-      <p style="font-size:13px; color:#666; margin-bottom:15px;">Pilih template, edit sesuai kebutuhan, lalu simpan.</p>
-      <div id="templateList"></div>
-    </div>
-    <div class="card">
-      <div class="card-title">🌐 Import dari URL Web Lain</div>
-      <div class="import-box">
-        <h3>Ambil Data dari Website</h3>
-        <p>Masukkan URL Google Docs yang di-publish atau URL JSON/CSV</p>
-        <input type="url" id="importUrl" placeholder="https://docs.google.com/..." style="margin-bottom:10px;">
-        <button class="btn btn-info" onclick="importFromUrl()">🌐 Ambil dari URL</button>
-      </div>
-      <div id="importUrlResult"></div>
-    </div>
-    <div class="card">
-      <div class="card-title">📁 Import dari File</div>
-      <div class="import-box">
-        <h3>Upload File CSV/JSON</h3>
-        <p>Upload file administrasi dari komputer Anda</p>
-        <input type="file" id="importFile" accept=".csv,.json" style="margin-bottom:10px;">
-        <button class="btn btn-warning" onclick="importFromFile()">📁 Import File</button>
-      </div>
-      <div id="importFileResult"></div>
-    </div>
-  </div>
-
-  <!-- RPL & JADWAL BK -->
+  <!-- RPL & JADWAL (digabung dengan tab) -->
   <div id="page-rpl-jadwal" class="page">
-    <div class="card">
-      <div class="card-title">📝 Tambah RPL / Jadwal BK</div>
-      <form id="formRPLJadwal" onsubmit="submitRPLJadwal(event)">
-        <input type="hidden" id="rpl_jadwal_mode" value="rpl">
-        <div class="row" style="margin-bottom:15px;">
-          <div class="col"><button type="button" class="btn btn-info" onclick="switchRPLJadwalMode('rpl')" id="btnModeRPL">Mode RPL</button></div>
-          <div class="col"><button type="button" class="btn btn-secondary" onclick="switchRPLJadwalMode('jadwal')" id="btnModeJadwal">Mode Jadwal</button></div>
-        </div>
-        
-        <!-- Form RPL -->
-        <div id="formRPLFields">
+    <div class="admin-tabs">
+      <button class="admin-tab active" onclick="switchRJTab('rpl', this)">📝 RPL</button>
+      <button class="admin-tab" onclick="switchRJTab('jadwal', this)"> Jadwal</button>
+    </div>
+
+    <!-- Tab RPL -->
+    <div id="rj-tab-rpl" class="admin-tab-content">
+      <div class="card">
+        <div class="card-title">📝 Tambah RPL BK</div>
+        <form id="formRPL" onsubmit="submitRPL(event)">
           <div class="form-group"><label>Topik Layanan *</label><input type="text" name="topik" required></div>
           <div class="row">
             <div class="col form-group"><label>Jenis Layanan *</label><select name="jenisLayanan" required><option value="">-- Pilih --</option><option>Bimbingan Klasikal</option><option>Konseling Individu</option><option>Konseling Kelompok</option></select></div>
@@ -189,44 +201,61 @@
             <div class="col form-group"><label>Metode *</label><input type="text" name="metode" required></div>
             <div class="col form-group"><label>Waktu (menit) *</label><input type="number" name="waktu" required></div>
           </div>
+          <div class="form-group"><label>Evaluasi</label><textarea name="evaluasi" rows="2"></textarea></div>
+          <div class="form-group"><label>Catatan</label><textarea name="catatan" rows="2"></textarea></div>
+          <div class="form-group"><label>Nama Petugas BK *</label><input type="text" name="petugas" required></div>
+          <button type="submit" class="btn btn-success" id="btnRPL"> Simpan RPL</button>
+        </form>
+        <div id="alert-rpl" class="alert"></div>
+      </div>
+      <div class="card no-print">
+        <div class="card-title">📋 Daftar RPL</div>
+        <div class="row">
+          <div class="col form-group"><label>Filter Jenis</label><select id="filter_rpl_jenis" onchange="loadRPL()"><option value="">Semua</option><option>Bimbingan Klasikal</option><option>Konseling Individu</option><option>Konseling Kelompok</option></select></div>
+          <div class="col form-group"><label>Filter Kelas</label><select id="filter_rpl_kelas" onchange="loadRPL()"><option value="">Semua</option><option value="7">Kelas 7</option><option value="8">Kelas 8</option><option value="9">Kelas 9</option></select></div>
         </div>
+        <button class="btn" onclick="loadRPL()">🔄 Refresh</button>
+      </div>
+      <div id="rplList"></div>
+    </div>
 
-        <!-- Form Jadwal -->
-        <div id="formJadwalFields" style="display:none;">
+    <!-- Tab Jadwal -->
+    <div id="rj-tab-jadwal" class="admin-tab-content" style="display:none;">
+      <div class="card">
+        <div class="card-title">📅 Tambah Jadwal BK</div>
+        <form id="formJadwal" onsubmit="submitJadwal(event)">
           <div class="row">
             <div class="col form-group"><label>Tanggal *</label><input type="date" name="tanggal" required></div>
-            <div class="col form-group"><label>Jenis Layanan *</label><select name="jenisLayananJadwal" required><option value="">-- Pilih --</option><option>Bimbingan Klasikal</option><option>Konseling Individu</option><option>Konseling Kelompok</option></select></div>
+            <div class="col form-group"><label>Jenis Layanan *</label><select name="jenisLayanan" required><option value="">-- Pilih --</option><option>Bimbingan Klasikal</option><option>Konseling Individu</option><option>Konseling Kelompok</option></select></div>
           </div>
           <div class="row">
             <div class="col form-group"><label>Jam Mulai *</label><input type="time" name="jamMulai" required></div>
             <div class="col form-group"><label>Jam Selesai *</label><input type="time" name="jamSelesai" required></div>
           </div>
-          <div class="form-group"><label>Topik *</label><input type="text" name="topikJadwal" required></div>
+          <div class="form-group"><label>Topik *</label><input type="text" name="topik" required></div>
           <div class="row">
-            <div class="col form-group"><label>Kelas *</label><input type="text" name="kelasJadwal" required></div>
+            <div class="col form-group"><label>Kelas *</label><input type="text" name="kelas" required></div>
             <div class="col form-group"><label>Lokasi *</label><input type="text" name="lokasi" required></div>
           </div>
-        </div>
-
-        <div class="form-group"><label>Catatan</label><textarea name="catatan" rows="2"></textarea></div>
-        <div class="form-group"><label>Nama Petugas BK *</label><input type="text" name="petugas" required></div>
-        <button type="submit" class="btn btn-success" id="btnRPLJadwal">💾 Simpan</button>
-      </form>
-      <div id="alert-rpl-jadwal" class="alert"></div>
-    </div>
-    
-    <div class="card no-print">
-      <div class="card-title">📋 Daftar RPL & Jadwal</div>
-      <div class="row">
-        <div class="col form-group"><label>Filter Tanggal</label><input type="date" id="filter_rplj_tanggal" onchange="loadRPLJadwal()"></div>
-        <div class="col form-group"><label>Filter Kelas</label><select id="filter_rplj_kelas" onchange="loadRPLJadwal()"><option value="">Semua</option><option value="7">Kelas 7</option><option value="8">Kelas 8</option><option value="9">Kelas 9</option></select></div>
+          <div class="form-group"><label>Nama Petugas BK *</label><input type="text" name="petugas" required></div>
+          <div class="form-group"><label>Catatan</label><textarea name="catatan" rows="2"></textarea></div>
+          <button type="submit" class="btn btn-success" id="btnJadwal">💾 Simpan Jadwal</button>
+        </form>
+        <div id="alert-jadwal" class="alert"></div>
       </div>
-      <button class="btn" onclick="loadRPLJadwal()">🔄 Refresh</button>
+      <div class="card no-print">
+        <div class="card-title">📊 Daftar Jadwal</div>
+        <div class="row">
+          <div class="col form-group"><label>Filter Tanggal</label><input type="date" id="filter_jadwal_tanggal" onchange="loadJadwal()"></div>
+          <div class="col form-group"><label>Filter Kelas</label><select id="filter_jadwal_kelas" onchange="loadJadwal()"><option value="">Semua</option><option value="7">Kelas 7</option><option value="8">Kelas 8</option><option value="9">Kelas 9</option></select></div>
+        </div>
+        <button class="btn" onclick="loadJadwal()">🔄 Refresh</button>
+      </div>
+      <div id="jadwalList"></div>
     </div>
-    <div id="rplJadwalList"></div>
   </div>
 
-  <!-- LAPORAN -->
+  <!-- LAPORAN (dengan tombol Cetak digabung) -->
   <div id="page-laporan" class="page">
     <div class="card no-print">
       <div class="card-title">📋 Filter Laporan</div>
@@ -238,10 +267,11 @@
         <div class="col form-group"><label>Tingkat Kelas</label><select id="filter_kelas"><option value="">Semua</option><option value="7">Kelas 7</option><option value="8">Kelas 8</option><option value="9">Kelas 9</option></select></div>
         <div class="col form-group"><label>Jenis Layanan</label><select id="filter_jenis"><option value="">Semua</option><option>Konseling Individu</option><option>Bimbingan Klasikal</option><option>Konseling Kelompok</option><option>Mediasi</option><option>Home Visit</option></select></div>
       </div>
-      <button class="btn" onclick="loadLaporan()">🔍 Tampilkan Laporan</button>
+      <button class="btn" onclick="loadLaporan()"> Tampilkan Laporan</button>
     </div>
     <div class="card no-print" style="display:flex; gap:10px;">
-      <button class="btn btn-success" style="margin:0;" onclick="window.print()">🖨️ Cetak / PDF</button>
+      <button class="btn btn-success" style="margin:0; flex:1;" onclick="window.print()">🖨️ Cetak / PDF</button>
+      <button class="btn btn-warning" style="margin:0; flex:1;" onclick="exportCSV()">📊 Export CSV</button>
     </div>
     <div id="laporanSummary" class="card" style="display:none;">
       <div class="card-title">📊 Ringkasan</div>
@@ -253,24 +283,6 @@
       </div>
     </div>
     <div id="laporanList"></div>
-  </div>
-
-  <!-- CETAK DOKUMEN -->
-  <div id="page-cetak" class="page">
-    <div class="card">
-      <div class="card-title">🖨️ Cetak Dokumen BK</div>
-      <p style="font-size:13px; color:#666; margin-bottom:15px;">Pilih jenis dokumen:</p>
-      <div class="stats-grid">
-        <button class="btn btn-success" onclick="cetakDokumen('Laporan Layanan BK')">📋 Laporan Layanan</button>
-        <button class="btn btn-warning" onclick="cetakDokumen('Administrasi BK')">📊 Administrasi BK</button>
-        <button class="btn" onclick="cetakDokumen('RPL BK')">📝 RPL BK</button>
-        <button class="btn btn-secondary" onclick="cetakDokumen('Jadwal BK')">📅 Jadwal BK</button>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-title">📄 Preview Dokumen</div>
-      <div id="cetakPreview" style="min-height:200px; padding:20px; background:#f8f9fa; border-radius:8px; text-align:center; color:#999;">Pilih jenis dokumen</div>
-    </div>
   </div>
 </div>
 
@@ -303,19 +315,16 @@
   </div>
 </div>
 
-<!-- Bottom Navigation -->
+<!-- Bottom Navigation (6 menu saja) -->
 <div class="bottom-nav">
   <button class="nav-item active" onclick="switchPage('dashboard', this)"><span class="nav-icon">📊</span>Dashboard</button>
-  <button class="nav-item" onclick="switchPage('layanan', this)"><span class="nav-icon">📝</span>Input</button>
+  <button class="nav-item" onclick="switchPage('layanan', this)"><span class="nav-icon">📝</span>Layanan</button>
   <button class="nav-item" onclick="switchPage('siswa', this)"><span class="nav-icon">👥</span>Siswa</button>
   <button class="nav-item" onclick="switchPage('administrasi', this)"><span class="nav-icon">📋</span>Admin</button>
-  <button class="nav-item" onclick="switchPage('template', this)"><span class="nav-icon">📚</span>Template</button>
   <button class="nav-item" onclick="switchPage('rpl-jadwal', this)"><span class="nav-icon">📅</span>RPL/Jadwal</button>
-  <button class="nav-item" onclick="switchPage('laporan', this)"><span class="nav-icon">📈</span>Laporan</button>
-  <button class="nav-item" onclick="switchPage('cetak', this)"><span class="nav-icon">🖨️</span>Cetak</button>
+  <button class="nav-item" onclick="switchPage('laporan', this)"><span class="nav-icon"></span>Laporan</button>
 </div>
 
-<!-- PERHATIAN: Huruf J kapital pada Js -->
 <script src="Js/api.js"></script>
 <script src="Js/dashboard.js"></script>
 <script src="Js/layanan.js"></script>
