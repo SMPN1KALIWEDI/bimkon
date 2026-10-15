@@ -42,6 +42,8 @@
   .btn-secondary { background: #6c757d; }
   .btn-warning { background: #f0ad4e; color: #000; }
   .btn-success { background: #28a745; }
+  .btn-danger { background: #dc3545; }
+  .btn-info { background: #17a2b8; }
   .btn:disabled { background: #ccc; }
   .search-box { background: #f8f9fa; padding: 12px; border-radius: 10px; border: 1px solid #e9ecef; margin-bottom: 12px; }
   .selected-info { background: #e7f1ff; padding: 10px; border-radius: 8px; border-left: 4px solid #1a73e8; margin-top: 10px; display: none; }
@@ -58,6 +60,29 @@
   .badge-selesai { background: #d4edda; color: #155724; }
   .badge-rujuk { background: #f8d7da; color: #721c24; }
   .loading { text-align: center; padding: 20px; color: #999; }
+  
+  /* Template Cards */
+  .template-card { background: white; border: 2px solid #e9ecef; border-radius: 12px; padding: 15px; margin-bottom: 10px; cursor: pointer; transition: all 0.2s; }
+  .template-card:hover { border-color: #1a73e8; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(26,115,232,0.15); }
+  .template-card.selected { border-color: #28a745; background: #f0fff4; }
+  .template-icon { font-size: 32px; margin-bottom: 8px; }
+  .template-name { font-weight: bold; color: #1a73e8; font-size: 15px; margin-bottom: 5px; }
+  .template-desc { font-size: 12px; color: #666; line-height: 1.4; }
+  .template-tag { display: inline-block; background: #e7f1ff; color: #1a73e8; padding: 3px 8px; border-radius: 10px; font-size: 10px; margin-top: 8px; }
+  
+  /* Import Section */
+  .import-box { background: #fff8e1; border: 2px dashed #ffc107; border-radius: 12px; padding: 20px; text-align: center; margin-bottom: 15px; }
+  .import-box h3 { margin: 0 0 10px 0; color: #856404; }
+  .import-box p { margin: 0 0 15px 0; color: #666; font-size: 13px; }
+  
+  /* Modal */
+  .modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
+  .modal.show { display: flex; }
+  .modal-content { background: white; border-radius: 12px; padding: 20px; max-width: 600px; width: 100%; max-height: 90vh; overflow-y: auto; }
+  .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #e9ecef; }
+  .modal-title { font-size: 18px; font-weight: bold; color: #1a73e8; margin: 0; }
+  .modal-close { background: none; border: none; font-size: 24px; cursor: pointer; color: #666; }
+  
   @media print {
     .app-header, .bottom-nav, .btn, .no-print { display: none !important; }
     .page { padding-bottom: 0; display: block !important; }
@@ -79,7 +104,7 @@
   <!-- DASHBOARD -->
   <div id="page-dashboard" class="page active">
     <div class="card">
-      <div class="card-title">📊 Ringkasan Data Siswa</div>
+      <div class="card-title"> Ringkasan Data Siswa</div>
       <div class="stats-grid">
         <div class="stat-card"><div class="stat-number" id="d_totalSiswa">-</div><div class="stat-label">Total Siswa Aktif</div></div>
         <div class="stat-card green"><div class="stat-number" id="d_kelas7">-</div><div class="stat-label">Kelas 7</div></div>
@@ -106,7 +131,7 @@
       <div class="card-title">📝 Input Layanan Konseling</div>
       <form id="formLayanan" onsubmit="submitLayanan(event)">
         <div class="search-box">
-          <label>🔍 Cari Siswa</label>
+          <label> Cari Siswa</label>
           <div class="row">
             <div class="col"><select id="lay_tingkat" onchange="loadKelas('lay')"><option value="">Pilih Tingkat</option><option value="7">Kelas 7</option><option value="8">Kelas 8</option><option value="9">Kelas 9</option></select></div>
             <div class="col"><select id="lay_kelas" onchange="loadSiswa('lay')" disabled><option value="">Pilih Kelas</option></select></div>
@@ -213,7 +238,7 @@
       <div id="alert-rpl" class="alert"></div>
     </div>
     <div class="card no-print">
-      <div class="card-title">📋 Daftar RPL</div>
+      <div class="card-title"> Daftar RPL</div>
       <div class="row">
         <div class="col form-group"><label>Filter Jenis</label><select id="filter_rpl_jenis" onchange="loadRPL()"><option value="">Semua</option><option>Bimbingan Klasikal</option><option>Konseling Individu</option><option>Konseling Kelompok</option></select></div>
         <div class="col form-group"><label>Filter Kelas</label><select id="filter_rpl_kelas" onchange="loadRPL()"><option value="">Semua</option><option value="7">Kelas 7</option><option value="8">Kelas 8</option><option value="9">Kelas 9</option></select></div>
@@ -243,7 +268,7 @@
         </div>
         <div class="form-group"><label>Nama Petugas BK *</label><input type="text" name="petugas" required></div>
         <div class="form-group"><label>Catatan</label><textarea name="catatan" rows="2"></textarea></div>
-        <button type="submit" class="btn btn-success" id="btnJadwal">💾 Simpan Jadwal</button>
+        <button type="submit" class="btn btn-success" id="btnJadwal"> Simpan Jadwal</button>
       </form>
       <div id="alert-jadwal" class="alert"></div>
     </div>
@@ -256,6 +281,37 @@
       <button class="btn" onclick="loadJadwal()">🔄 Refresh</button>
     </div>
     <div id="jadwalList"></div>
+  </div>
+
+  <!-- TEMPLATE & IMPORT (HALAMAN BARU) -->
+  <div id="page-template" class="page">
+    <div class="card">
+      <div class="card-title">📚 Template Administrasi BK</div>
+      <p style="font-size:13px; color:#666; margin-bottom:15px;">Pilih template standar BK, edit sesuai kebutuhan sekolah Anda, lalu simpan ke Administrasi BK.</p>
+      <div id="templateList"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🌐 Import dari URL Web Lain</div>
+      <div class="import-box">
+        <h3> Ambil Data dari Website</h3>
+        <p>Masukkan URL Google Docs yang di-publish atau URL JSON/CSV</p>
+        <input type="url" id="importUrl" placeholder="https://docs.google.com/... atau URL JSON/CSV" style="margin-bottom:10px;">
+        <button class="btn btn-info" onclick="importFromUrl()">🌐 Ambil dari URL</button>
+      </div>
+      <div id="importUrlResult"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"> Import dari File</div>
+      <div class="import-box">
+        <h3> Upload File CSV/JSON</h3>
+        <p>Upload file administrasi dari komputer Anda</p>
+        <input type="file" id="importFile" accept=".csv,.json" style="margin-bottom:10px;">
+        <button class="btn btn-warning" onclick="importFromFile()">📁 Import File</button>
+      </div>
+      <div id="importFileResult"></div>
+    </div>
   </div>
 
   <!-- LAPORAN -->
@@ -295,7 +351,7 @@
       <div class="stats-grid">
         <button class="btn btn-success" onclick="cetakDokumen('Laporan Layanan BK')">📋 Laporan Layanan</button>
         <button class="btn btn-warning" onclick="cetakDokumen('Administrasi BK')">📊 Administrasi BK</button>
-        <button class="btn" onclick="cetakDokumen('RPL BK')">📝 RPL BK</button>
+        <button class="btn" onclick="cetakDokumen('RPL BK')"> RPL BK</button>
         <button class="btn btn-secondary" onclick="cetakDokumen('Jadwal BK')">📅 Jadwal BK</button>
       </div>
     </div>
@@ -308,12 +364,42 @@
   </div>
 </div>
 
+<!-- MODAL EDIT TEMPLATE -->
+<div id="modalEdit" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 class="modal-title">✏️ Edit & Simpan Template</h3>
+      <button class="modal-close" onclick="closeModal()">×</button>
+    </div>
+    <form id="formTemplateEdit" onsubmit="submitTemplateEdit(event)">
+      <input type="hidden" id="tpl_id" name="id">
+      <div class="row">
+        <div class="col form-group"><label>Jenis Program *</label><select name="jenisProgram" id="tpl_jenis" required><option value="">-- Pilih --</option><option>Program Tahunan</option><option>Program Semester</option><option>Program Bulanan</option><option>Program Mingguan</option></select></div>
+        <div class="col form-group"><label>Periode *</label><input type="text" name="periode" id="tpl_periode" required></div>
+      </div>
+      <div class="row">
+        <div class="col form-group"><label>Tanggal Mulai</label><input type="date" name="tanggalMulai" id="tpl_tglMulai"></div>
+        <div class="col form-group"><label>Tanggal Selesai</label><input type="date" name="tanggalSelesai" id="tpl_tglSelesai"></div>
+      </div>
+      <div class="form-group"><label>Tujuan Program *</label><textarea name="tujuan" id="tpl_tujuan" rows="2" required></textarea></div>
+      <div class="form-group"><label>Deskripsi Program *</label><textarea name="deskripsi" id="tpl_deskripsi" rows="3" required></textarea></div>
+      <div class="form-group"><label>Target Sasaran *</label><input type="text" name="targetSasaran" id="tpl_target" required></div>
+      <div class="form-group"><label>Metode Pelaksanaan *</label><input type="text" name="metode" id="tpl_metode" required></div>
+      <div class="form-group"><label>Evaluasi</label><textarea name="evaluasi" id="tpl_evaluasi" rows="2"></textarea></div>
+      <div class="form-group"><label>Nama Petugas BK *</label><input type="text" name="petugas" id="tpl_petugas" required></div>
+      <button type="submit" class="btn btn-success">💾 Simpan ke Administrasi BK</button>
+    </form>
+    <div id="alert-template" class="alert"></div>
+  </div>
+</div>
+
 <!-- Bottom Navigation -->
 <div class="bottom-nav">
   <button class="nav-item active" onclick="switchPage('dashboard', this)"><span class="nav-icon">📊</span>Dashboard</button>
   <button class="nav-item" onclick="switchPage('layanan', this)"><span class="nav-icon">📝</span>Input</button>
   <button class="nav-item" onclick="switchPage('siswa', this)"><span class="nav-icon">👥</span>Siswa</button>
   <button class="nav-item" onclick="switchPage('administrasi', this)"><span class="nav-icon">📋</span>Admin</button>
+  <button class="nav-item" onclick="switchPage('template', this)"><span class="nav-icon">📚</span>Template</button>
   <button class="nav-item" onclick="switchPage('rpl', this)"><span class="nav-icon">📄</span>RPL</button>
   <button class="nav-item" onclick="switchPage('jadwal', this)"><span class="nav-icon">📅</span>Jadwal</button>
   <button class="nav-item" onclick="switchPage('laporan', this)"><span class="nav-icon">📈</span>Laporan</button>
@@ -321,10 +407,8 @@
 </div>
 
 <script>
-// ✅ URL API ANDA SUDAH DIPASANG DI SINI
 const API_URL = 'https://script.google.com/macros/s/AKfycbxMJaZ7GLeA9xH92YQCvan4JWvMxR3GxQ1bxXDQSxsEwCqaXU4LxZpMMedv8LTOAAhqeg/exec';
 
-// Helper functions untuk API call
 async function apiGet(action, params = {}) {
   params.action = action;
   const queryString = Object.keys(params).map(key => key + '=' + encodeURIComponent(params[key])).join('&');
@@ -334,15 +418,203 @@ async function apiGet(action, params = {}) {
 
 async function apiPost(action, data = {}) {
   await fetch(API_URL + '?action=' + action, {
-    method: 'POST',
-    mode: 'no-cors',
+    method: 'POST', mode: 'no-cors',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data)
   });
   return { success: true, message: 'Data berhasil dikirim!' };
 }
 
-// Navigasi
+// ===== TEMPLATE DATA =====
+const TEMPLATES = [
+  { id: 'template_tahunan', icon: '', nama: 'Program Tahunan BK', tag: 'Tahunan',
+    jenis: 'Program Tahunan', periode: 'Tahun Pelajaran 2025/2026',
+    tujuan: 'Meningkatkan kualitas layanan Bimbingan dan Konseling untuk mendukung pengembangan diri peserta didik secara utuh dan optimal.',
+    deskripsi: 'Program kerja BK yang mencakup seluruh kegiatan bimbingan dan konseling selama satu tahun pelajaran, meliputi bimbingan pribadi, sosial, belajar, dan karir.',
+    targetSasaran: 'Seluruh peserta didik kelas 7, 8, dan 9',
+    metode: 'Bimbingan klasikal, konseling individu, konseling kelompok, layanan orientasi, layanan informasi, kegiatan pendukung',
+    evaluasi: 'Evaluasi dilakukan setiap akhir semester melalui analisis data layanan dan angket kepuasan siswa.',
+    petugas: 'Tim BK SMP' },
+  { id: 'template_semester1', icon: '', nama: 'Program Semester 1 BK', tag: 'Semester',
+    jenis: 'Program Semester', periode: 'Semester Ganjil 2025/2026',
+    tujuan: 'Melaksanakan program layanan BK yang terstruktur untuk membantu siswa beradaptasi dengan lingkungan sekolah baru dan mengembangkan potensi diri.',
+    deskripsi: 'Program layanan BK semester ganjil meliputi orientasi siswa baru, bimbingan belajar, pencegahan bullying, dan persiapan PTS/PAS.',
+    targetSasaran: 'Siswa kelas 7 (adaptasi), kelas 8 (pengembangan), kelas 9 (persiapan ujian)',
+    metode: 'Bimbingan klasikal mingguan, konseling kasus, home visit, kolaborasi dengan wali kelas',
+    evaluasi: 'Monitoring bulanan dan evaluasi akhir semester.',
+    petugas: 'Tim BK SMP' },
+  { id: 'template_bulanan', icon: '🗓️', nama: 'Program Bulanan BK', tag: 'Bulanan',
+    jenis: 'Program Bulanan', periode: 'Oktober 2025',
+    tujuan: 'Melaksanakan kegiatan BK terfokus pada pencegahan kenakalan remaja dan peningkatan motivasi belajar.',
+    deskripsi: 'Kegiatan bulan Oktober: (1) Bimbingan klasikal topik manajemen emosi, (2) Konseling kelompok untuk siswa bermasalah, (3) Layanan informasi tentang bahaya narkoba.',
+    targetSasaran: 'Kelas 7A, 7B, 8A, 8B, 9A',
+    metode: 'Ceramah interaktif, diskusi kelompok, role play, studi kasus',
+    evaluasi: 'Pre-test dan post-test, angket evaluasi kegiatan.',
+    petugas: 'Tim BK SMP' },
+  { id: 'template_mingguan', icon: '📋', nama: 'Program Mingguan BK', tag: 'Mingguan',
+    jenis: 'Program Mingguan', periode: 'Minggu ke-2 Oktober 2025',
+    tujuan: 'Memberikan layanan bimbingan klasikal tentang cara belajar efektif kepada siswa kelas 7.',
+    deskripsi: 'Senin: Konseling individu (3 siswa). Selasa: Bimbingan klasikal kelas 7A (manajemen waktu). Rabu: Konseling kelompok (remaja sehat). Kamis: Bimbingan klasikal kelas 7B. Jumat: Rekap dan pelaporan.',
+    targetSasaran: 'Siswa kelas 7A dan 7B',
+    metode: 'Bimbingan klasikal 45 menit, konseling individu 30 menit',
+    evaluasi: 'Catatan hasil layanan dan tindak lanjut.',
+    petugas: 'Tim BK SMP' },
+  { id: 'template_rpl', icon: '', nama: 'RPL Bimbingan Klasikal', tag: 'RPL',
+    jenis: 'Program Mingguan', periode: 'RPL Standar',
+    tujuan: 'Siswa mampu memahami dan menerapkan teknik belajar efektif dalam kehidupan sehari-hari.',
+    deskripsi: 'Rencana Pelaksanaan Layanan bimbingan klasikal dengan topik "Belajar Efektif dan Efisien" untuk siswa SMP.',
+    targetSasaran: 'Siswa kelas 7/8/9',
+    metode: 'Ceramah, diskusi, presentasi, praktik langsung',
+    evaluasi: 'Observasi partisipasi siswa dan kuesioner refleksi.',
+    petugas: 'Guru BK' },
+  { id: 'template_laporan', icon: '📊', nama: 'Laporan Bulanan BK', tag: 'Laporan',
+    jenis: 'Program Bulanan', periode: 'Laporan Bulan Berjalan',
+    tujuan: 'Mendokumentasikan seluruh kegiatan BK yang telah dilaksanakan selama satu bulan.',
+    deskripsi: 'Laporan ini berisi rekapitulasi layanan: jumlah siswa yang dilayani, jenis layanan, masalah yang ditangani, dan tindak lanjut yang dilakukan.',
+    targetSasaran: 'Kepala Sekolah dan Pengawas BK',
+    metode: 'Rekap data dari buku kasus dan jurnal kegiatan BK',
+    evaluasi: 'Analisis capaian program dan rencana perbaikan.',
+    petugas: 'Koordinator BK' }
+];
+
+function renderTemplates() {
+  const container = document.getElementById('templateList');
+  container.innerHTML = TEMPLATES.map(t => `
+    <div class="template-card" onclick="openTemplateEdit('${t.id}')">
+      <div class="template-icon">${t.icon}</div>
+      <div class="template-name">${t.nama}</div>
+      <div class="template-desc">${t.deskripsi.substring(0, 100)}...</div>
+      <span class="template-tag">${t.tag}</span>
+      <span class="template-tag" style="background:#e8f5e9; color:#28a745;">✏️ Klik untuk Edit</span>
+    </div>
+  `).join('');
+}
+
+function openTemplateEdit(id) {
+  const tpl = TEMPLATES.find(t => t.id === id);
+  if (!tpl) return;
+  document.getElementById('tpl_id').value = tpl.id;
+  document.getElementById('tpl_jenis').value = tpl.jenis;
+  document.getElementById('tpl_periode').value = tpl.periode;
+  document.getElementById('tpl_tujuan').value = tpl.tujuan;
+  document.getElementById('tpl_deskripsi').value = tpl.deskripsi;
+  document.getElementById('tpl_target').value = tpl.targetSasaran;
+  document.getElementById('tpl_metode').value = tpl.metode;
+  document.getElementById('tpl_evaluasi').value = tpl.evaluasi;
+  document.getElementById('tpl_petugas').value = tpl.petugas;
+  document.getElementById('modalEdit').classList.add('show');
+}
+
+function closeModal() {
+  document.getElementById('modalEdit').classList.remove('show');
+}
+
+async function submitTemplateEdit(e) {
+  e.preventDefault();
+  const formData = new FormData(document.getElementById('formTemplateEdit'));
+  const data = Object.fromEntries(formData);
+  const btn = e.target.querySelector('button[type="submit"]');
+  btn.disabled = true; btn.innerText = '⏳ Menyimpan...';
+  try {
+    const res = await apiPost('simpanDariTemplate', data);
+    btn.disabled = false; btn.innerText = '💾 Simpan ke Administrasi BK';
+    showAlert('template', res.message, res.success ? 'success' : 'error');
+    if (res.success) closeModal();
+  } catch (err) {
+    btn.disabled = false;
+    showAlert('template', 'Error: ' + err.message, 'error');
+  }
+}
+
+// ===== IMPORT DARI URL =====
+async function importFromUrl() {
+  const url = document.getElementById('importUrl').value.trim();
+  const resultDiv = document.getElementById('importUrlResult');
+  if (!url) { resultDiv.innerHTML = '<div class="alert alert-error" style="display:block;">⚠️ Masukkan URL terlebih dahulu!</div>'; return; }
+  resultDiv.innerHTML = '<div class="loading">⏳ Mengambil data dari URL...</div>';
+  try {
+    const res = await apiGet('parseUrlContent', { url: url });
+    if (res.success) {
+      if (res.type === 'json' && Array.isArray(res.data)) {
+        resultDiv.innerHTML = `<div class="alert alert-success" style="display:block;">✅ Berhasil mengambil ${res.data.length} data! Silakan simpan satu per satu.</div>` +
+          res.data.slice(0, 5).map((item, idx) => `
+            <div class="template-card" onclick='openImportedEdit(${JSON.stringify(item).replace(/'/g, "\\'")})'>
+              <div class="template-name">Data ${idx + 1}: ${item.nama || item.nama_program || item.JENIS_PROGRAM || 'Tanpa Nama'}</div>
+              <div class="template-desc">${(item.deskripsi || item.DESKRIPSI || '').substring(0, 100)}</div>
+              <span class="template-tag">📥 Imported</span>
+            </div>
+          `).join('');
+      } else if (res.type === 'text') {
+        resultDiv.innerHTML = `<div class="alert alert-success" style="display:block;">✅ Konten berhasil diambil! Silakan copy-paste ke form Administrasi BK.</div>
+          <textarea style="width:100%; height:150px; margin-top:10px;">${res.data}</textarea>`;
+      } else {
+        resultDiv.innerHTML = '<div class="alert alert-error" style="display:block;">⚠️ Format data tidak dikenali.</div>';
+      }
+    } else {
+      resultDiv.innerHTML = `<div class="alert alert-error" style="display:block;">❌ ${res.message}</div>`;
+    }
+  } catch (e) {
+    resultDiv.innerHTML = `<div class="alert alert-error" style="display:block;">❌ Error: ${e.message}</div>`;
+  }
+}
+
+function openImportedEdit(item) {
+  document.getElementById('tpl_id').value = 'imported_' + Date.now();
+  document.getElementById('tpl_jenis').value = item.jenisProgram || item.JENIS_PROGRAM || 'Program Bulanan';
+  document.getElementById('tpl_periode').value = item.periode || item.PERIODE || '';
+  document.getElementById('tpl_tujuan').value = item.tujuan || item.TUJUAN || '';
+  document.getElementById('tpl_deskripsi').value = item.deskripsi || item.DESKRIPSI || '';
+  document.getElementById('tpl_target').value = item.targetSasaran || item.TARGET_SASARAN || '';
+  document.getElementById('tpl_metode').value = item.metode || item.METODE || '';
+  document.getElementById('tpl_evaluasi').value = item.evaluasi || item.EVALUASI || '';
+  document.getElementById('tpl_petugas').value = item.petugas || item.PETUGAS || '';
+  document.getElementById('modalEdit').classList.add('show');
+}
+
+// ===== IMPORT DARI FILE =====
+function importFromFile() {
+  const fileInput = document.getElementById('importFile');
+  const resultDiv = document.getElementById('importFileResult');
+  const file = fileInput.files[0];
+  if (!file) { resultDiv.innerHTML = '<div class="alert alert-error" style="display:block;">⚠️ Pilih file terlebih dahulu!</div>'; return; }
+  
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const content = e.target.result;
+      let data = [];
+      if (file.name.endsWith('.json')) {
+        data = JSON.parse(content);
+      } else if (file.name.endsWith('.csv')) {
+        const lines = content.split('\n').filter(l => l.trim());
+        const headers = lines[0].split(/[,;]/).map(h => h.trim().replace(/"/g, ''));
+        for (let i = 1; i < lines.length; i++) {
+          const values = lines[i].split(/[,;]/).map(v => v.trim().replace(/"/g, ''));
+          const row = {};
+          headers.forEach((h, idx) => row[h] = values[idx] || '');
+          data.push(row);
+        }
+      }
+      if (Array.isArray(data) && data.length > 0) {
+        resultDiv.innerHTML = `<div class="alert alert-success" style="display:block;">✅ Berhasil membaca ${data.length} data dari file! Klik untuk edit & simpan.</div>` +
+          data.slice(0, 5).map((item, idx) => `
+            <div class="template-card" onclick='openImportedEdit(${JSON.stringify(item).replace(/'/g, "\\'")})'>
+              <div class="template-name">Data ${idx + 1}: ${item.nama || item.nama_program || item.JENIS_PROGRAM || 'Tanpa Nama'}</div>
+              <div class="template-desc">${(item.deskripsi || item.DESKRIPSI || '').substring(0, 100)}</div>
+              <span class="template-tag">📁 From File</span>
+            </div>
+          `).join('');
+      } else {
+        resultDiv.innerHTML = '<div class="alert alert-error" style="display:block;">️ File kosong atau format salah.</div>';
+      }
+    } catch (err) {
+      resultDiv.innerHTML = `<div class="alert alert-error" style="display:block;">❌ Error membaca file: ${err.message}</div>`;
+    }
+  };
+  reader.readAsText(file);
+}
+
+// ===== NAVIGASI =====
 function switchPage(page, btn) {
   document.querySelectorAll('.nav-item').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -350,6 +622,7 @@ function switchPage(page, btn) {
   document.getElementById('page-' + page).classList.add('active');
   if (page === 'dashboard') loadDashboard();
   if (page === 'administrasi') loadAdministrasi();
+  if (page === 'template') renderTemplates();
   if (page === 'rpl') loadRPL();
   if (page === 'jadwal') loadJadwal();
   if (page === 'laporan') {
@@ -361,7 +634,7 @@ function switchPage(page, btn) {
   }
 }
 
-// Dashboard
+// ===== DASHBOARD =====
 async function loadDashboard() {
   try {
     const stats = await apiGet('getDashboardStats');
@@ -372,7 +645,7 @@ async function loadDashboard() {
     document.getElementById('d_totalLayanan').innerText = stats.layanan.total;
     document.getElementById('d_bulanIni').innerText = stats.layanan.bulanIni;
     renderChart('chartJenis', stats.layanan.jenis, stats.layanan.total);
-  } catch (e) { console.error('Error loading dashboard:', e); }
+  } catch (e) { console.error(e); }
 }
 
 function renderChart(containerId, data, total) {
@@ -385,7 +658,7 @@ function renderChart(containerId, data, total) {
   }).join('');
 }
 
-// Pencarian Siswa
+// ===== PENCARIAN SISWA =====
 async function loadKelas(prefix) {
   const tingkat = document.getElementById(prefix + '_tingkat').value;
   const selKelas = document.getElementById(prefix + '_kelas');
@@ -453,7 +726,7 @@ async function selectSiswaEdit(prefix) {
   }
 }
 
-// Submit Forms
+// ===== SUBMIT FORMS =====
 async function submitLayanan(e) {
   e.preventDefault();
   if (!document.getElementById('lay_nisn').value) { showAlert('layanan', '⚠️ Pilih siswa terlebih dahulu!', 'error'); return; }
@@ -463,7 +736,7 @@ async function submitLayanan(e) {
     const formData = new FormData(document.getElementById('formLayanan'));
     const data = Object.fromEntries(formData);
     const res = await apiPost('simpanLayanan', data);
-    btn.disabled = false; btn.innerText = '💾 Simpan Layanan';
+    btn.disabled = false; btn.innerText = ' Simpan Layanan';
     showAlert('layanan', res.message, res.success ? 'success' : 'error');
     if (res.success) {
       document.getElementById('formLayanan').reset();
@@ -471,10 +744,7 @@ async function submitLayanan(e) {
       document.getElementById('lay_nama').innerHTML = '<option value="">Pilih Nama Siswa</option>';
       document.getElementById('lay_nama').disabled = true;
     }
-  } catch (err) {
-    btn.disabled = false; btn.innerText = '💾 Simpan Layanan';
-    showAlert('layanan', 'Error: ' + err.message, 'error');
-  }
+  } catch (err) { btn.disabled = false; showAlert('layanan', 'Error: ' + err.message, 'error'); }
 }
 
 async function submitSiswa(e) {
@@ -490,10 +760,7 @@ async function submitSiswa(e) {
     btn.innerText = mode === 'edit' ? '💾 Update Data' : '➕ Tambah Siswa';
     showAlert('siswa', res.message, res.success ? 'success' : 'error');
     if (res.success && mode === 'tambah') document.getElementById('formSiswa').reset();
-  } catch (err) {
-    btn.disabled = false;
-    showAlert('siswa', 'Error: ' + err.message, 'error');
-  }
+  } catch (err) { btn.disabled = false; showAlert('siswa', 'Error: ' + err.message, 'error'); }
 }
 
 function resetSiswaForm() {
@@ -503,43 +770,6 @@ function resetSiswaForm() {
   document.getElementById('btnSiswa').className = 'btn btn-success';
   document.getElementById('btnReset').style.display = 'none';
   document.getElementById('alert-siswa').style.display = 'none';
-}
-
-async function loadLaporan() {
-  const filter = {
-    tanggalMulai: document.getElementById('filter_tglMulai').value,
-    tanggalAkhir: document.getElementById('filter_tglAkhir').value,
-    kelas: document.getElementById('filter_kelas').value,
-    jenisLayanan: document.getElementById('filter_jenis').value
-  };
-  const listContainer = document.getElementById('laporanList');
-  listContainer.innerHTML = '<div class="loading">⏳ Memuat...</div>';
-  try {
-    const data = await apiGet('getLaporanLayanan', filter);
-    if (data.length === 0) { listContainer.innerHTML = '<div class="loading">📭 Tidak ada data</div>'; document.getElementById('laporanSummary').style.display = 'none'; return; }
-    let selesai=0, proses=0, rujuk=0;
-    data.forEach(d => { const s = String(d['STATUS'] || 'Baru'); if (s === 'Selesai') selesai++; else if (s === 'Dalam Proses') proses++; else if (s === 'Rujuk') rujuk++; });
-    document.getElementById('r_total').innerText = data.length;
-    document.getElementById('r_selesai').innerText = selesai;
-    document.getElementById('r_proses').innerText = proses;
-    document.getElementById('r_rujuk').innerText = rujuk;
-    document.getElementById('laporanSummary').style.display = 'block';
-    listContainer.innerHTML = data.map(d => {
-      const status = d['STATUS'] || 'Baru';
-      let badgeClass = 'badge-baru';
-      if (status === 'Selesai') badgeClass = 'badge-selesai';
-      else if (status === 'Dalam Proses') badgeClass = 'badge-proses';
-      else if (status === 'Rujuk') badgeClass = 'badge-rujuk';
-      return '<div class="laporan-item"><div style="display:flex; justify-content:space-between;"><div><div class="laporan-nama">'+(d['NAMA_SISWA']||'-')+'</div><div class="laporan-kelas">Kelas: '+(d['KELAS']||'-')+' | NISN: '+(d['NISN']||'-')+'</div></div><div style="text-align:right;"><div style="font-size:11px; color:#666;">'+(d['ID_LAYANAN']||'-')+'</div><div style="font-size:11px; color:#999;">'+(d['TANGGAL']||'-')+'</div></div></div><div class="laporan-detail"><b>'+(d['JENIS_LAYANAN']||'-')+'</b> • '+(d['KATEGORI']||'-')+'</div><div class="laporan-detail"><b>Masalah:</b> '+(d['DESKRIPSI']||'-')+'</div><div class="laporan-detail"><b>Tindak Lanjut:</b> '+(d['TINDAK_LANJUT']||'-')+'</div><div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px;"><span class="badge '+badgeClass+'">'+status+'</span><select onchange="changeStatus(\''+d['ID_LAYANAN']+'\', this.value)" class="no-print" style="padding:4px; font-size:11px; width:auto;"><option value="Baru" '+(status==='Baru'?'selected':'')+'>Baru</option><option value="Dalam Proses" '+(status==='Dalam Proses'?'selected':'')+'>Proses</option><option value="Selesai" '+(status==='Selesai'?'selected':'')+'>Selesai</option><option value="Rujuk" '+(status==='Rujuk'?'selected':'')+'>Rujuk</option></select></div></div>';
-    }).join('');
-  } catch (e) { console.error(e); }
-}
-
-async function changeStatus(id, statusBaru) {
-  try {
-    const res = await apiPost('updateStatusLayanan', { id: id, status: statusBaru });
-    if (res.success) { showAlert('laporan', '✅ Status diupdate!', 'success'); loadLaporan(); }
-  } catch (e) { console.error(e); }
 }
 
 async function submitAdministrasi(e) {
@@ -583,7 +813,7 @@ async function updateStatusAdmin(id, status) {
 async function submitRPL(e) {
   e.preventDefault();
   const btn = document.getElementById('btnRPL');
-  btn.disabled = true; btn.innerText = '⏳ Menyimpan...';
+  btn.disabled = true; btn.innerText = ' Menyimpan...';
   try {
     const formData = new FormData(document.getElementById('formRPL'));
     const data = Object.fromEntries(formData);
@@ -643,6 +873,35 @@ async function updateStatusJadwal(id, status) {
   } catch (e) { console.error(e); }
 }
 
+async function loadLaporan() {
+  const filter = { tanggalMulai: document.getElementById('filter_tglMulai').value, tanggalAkhir: document.getElementById('filter_tglAkhir').value, kelas: document.getElementById('filter_kelas').value, jenisLayanan: document.getElementById('filter_jenis').value };
+  const listContainer = document.getElementById('laporanList');
+  listContainer.innerHTML = '<div class="loading"> Memuat...</div>';
+  try {
+    const data = await apiGet('getLaporanLayanan', filter);
+    if (data.length === 0) { listContainer.innerHTML = '<div class="loading">📭 Tidak ada data</div>'; document.getElementById('laporanSummary').style.display = 'none'; return; }
+    let selesai=0, proses=0, rujuk=0;
+    data.forEach(d => { const s = String(d['STATUS'] || 'Baru'); if (s === 'Selesai') selesai++; else if (s === 'Dalam Proses') proses++; else if (s === 'Rujuk') rujuk++; });
+    document.getElementById('r_total').innerText = data.length;
+    document.getElementById('r_selesai').innerText = selesai;
+    document.getElementById('r_proses').innerText = proses;
+    document.getElementById('r_rujuk').innerText = rujuk;
+    document.getElementById('laporanSummary').style.display = 'block';
+    listContainer.innerHTML = data.map(d => {
+      const status = d['STATUS'] || 'Baru';
+      let badgeClass = 'badge-baru';
+      if (status === 'Selesai') badgeClass = 'badge-selesai';
+      else if (status === 'Dalam Proses') badgeClass = 'badge-proses';
+      else if (status === 'Rujuk') badgeClass = 'badge-rujuk';
+      return '<div class="laporan-item"><div style="display:flex; justify-content:space-between;"><div><div class="laporan-nama">'+(d['NAMA_SISWA']||'-')+'</div><div class="laporan-kelas">Kelas: '+(d['KELAS']||'-')+' | NISN: '+(d['NISN']||'-')+'</div></div><div style="text-align:right;"><div style="font-size:11px; color:#666;">'+(d['ID_LAYANAN']||'-')+'</div><div style="font-size:11px; color:#999;">'+(d['TANGGAL']||'-')+'</div></div></div><div class="laporan-detail"><b>'+(d['JENIS_LAYANAN']||'-')+'</b> • '+(d['KATEGORI']||'-')+'</div><div class="laporan-detail"><b>Masalah:</b> '+(d['DESKRIPSI']||'-')+'</div><div class="laporan-detail"><b>Tindak Lanjut:</b> '+(d['TINDAK_LANJUT']||'-')+'</div><div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px;"><span class="badge '+badgeClass+'">'+status+'</span><select onchange="changeStatus(\''+d['ID_LAYANAN']+'\', this.value)" class="no-print" style="padding:4px; font-size:11px; width:auto;"><option value="Baru" '+(status==='Baru'?'selected':'')+'>Baru</option><option value="Dalam Proses" '+(status==='Dalam Proses'?'selected':'')+'>Proses</option><option value="Selesai" '+(status==='Selesai'?'selected':'')+'>Selesai</option><option value="Rujuk" '+(status==='Rujuk'?'selected':'')+'>Rujuk</option></select></div></div>';
+    }).join('');
+  } catch (e) { console.error(e); }
+}
+
+async function changeStatus(id, statusBaru) {
+  try { const res = await apiPost('updateStatusLayanan', { id: id, status: statusBaru }); if (res.success) { showAlert('laporan', '✅ Status diupdate!', 'success'); loadLaporan(); } } catch (e) { console.error(e); }
+}
+
 function cetakDokumen(jenis) {
   const preview = document.getElementById('cetakPreview');
   preview.innerHTML = '<div style="padding:20px;"><h3 style="color:#1a73e8;">Preview: ' + jenis + '</h3><p>Dokumen siap dicetak. Klik tombol di bawah untuk mencetak.</p><button class="btn btn-success" onclick="window.print()" style="margin-top:15px;">🖨️ Cetak Sekarang</button></div>';
@@ -657,7 +916,6 @@ function showAlert(page, msg, type) {
   setTimeout(() => el.style.display = 'none', 4000);
 }
 
-// Load dashboard saat pertama kali
 loadDashboard();
 </script>
 </body>
