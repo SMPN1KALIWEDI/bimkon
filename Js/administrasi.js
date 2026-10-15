@@ -1,13 +1,8 @@
-// ============================================
-// FILE: js/administrasi.js
-// FUNGSI: Administrasi BK + Template + Import
-// ============================================
-
 const TEMPLATES = [
   { id: 'template_tahunan', icon: '📅', nama: 'Program Tahunan BK', tag: 'Tahunan', jenis: 'Program Tahunan', periode: 'Tahun Pelajaran 2025/2026', tujuan: 'Meningkatkan kualitas layanan BK.', deskripsi: 'Program kerja BK selama satu tahun pelajaran.', targetSasaran: 'Seluruh peserta didik kelas 7, 8, 9', metode: 'Bimbingan klasikal, konseling', evaluasi: 'Evaluasi akhir semester.', petugas: 'Tim BK SMP' },
   { id: 'template_semester1', icon: '📚', nama: 'Program Semester 1', tag: 'Semester', jenis: 'Program Semester', periode: 'Semester Ganjil 2025/2026', tujuan: 'Layanan BK terstruktur.', deskripsi: 'Orientasi, bimbingan belajar, pencegahan bullying.', targetSasaran: 'Siswa kelas 7, 8, 9', metode: 'Bimbingan klasikal, home visit', evaluasi: 'Monitoring bulanan.', petugas: 'Tim BK SMP' },
   { id: 'template_bulanan', icon: '🗓️', nama: 'Program Bulanan', tag: 'Bulanan', jenis: 'Program Bulanan', periode: 'Oktober 2025', tujuan: 'Kegiatan BK terfokus.', deskripsi: 'Bimbingan klasikal, konseling kelompok.', targetSasaran: 'Kelas 7A-9A', metode: 'Ceramah, diskusi, role play', evaluasi: 'Pre-test dan post-test.', petugas: 'Tim BK SMP' },
-  { id: 'template_mingguan', icon: '', nama: 'Program Mingguan', tag: 'Mingguan', jenis: 'Program Mingguan', periode: 'Minggu ke-2 Oktober 2025', tujuan: 'Layanan bimbingan klasikal.', deskripsi: 'Jadwal layanan BK mingguan.', targetSasaran: 'Kelas 7A, 7B', metode: 'Bimbingan klasikal 45 menit', evaluasi: 'Catatan hasil layanan.', petugas: 'Tim BK SMP' },
+  { id: 'template_mingguan', icon: '📋', nama: 'Program Mingguan', tag: 'Mingguan', jenis: 'Program Mingguan', periode: 'Minggu ke-2 Oktober 2025', tujuan: 'Layanan bimbingan klasikal.', deskripsi: 'Jadwal layanan BK mingguan.', targetSasaran: 'Kelas 7A, 7B', metode: 'Bimbingan klasikal 45 menit', evaluasi: 'Catatan hasil layanan.', petugas: 'Tim BK SMP' },
   { id: 'template_rpl', icon: '📝', nama: 'RPL Bimbingan Klasikal', tag: 'RPL', jenis: 'Program Mingguan', periode: 'RPL Standar', tujuan: 'Siswa mampu menerapkan teknik belajar efektif.', deskripsi: 'RPL topik Belajar Efektif.', targetSasaran: 'Siswa kelas 7/8/9', metode: 'Ceramah, diskusi, praktik', evaluasi: 'Observasi dan kuesioner.', petugas: 'Guru BK' },
   { id: 'template_laporan', icon: '📊', nama: 'Laporan Bulanan BK', tag: 'Laporan', jenis: 'Program Bulanan', periode: 'Laporan Bulan Berjalan', tujuan: 'Dokumentasi kegiatan BK.', deskripsi: 'Rekapitulasi layanan BK bulanan.', targetSasaran: 'Kepala Sekolah', metode: 'Rekap data buku kasus', evaluasi: 'Analisis capaian.', petugas: 'Koordinator BK' }
 ];
@@ -91,7 +86,7 @@ function importFromFile() {
   const fileInput = document.getElementById('importFile');
   const resultDiv = document.getElementById('importFileResult');
   const file = fileInput.files[0];
-  if (!file) { resultDiv.innerHTML = '<div class="alert alert-error" style="display:block;">️ Pilih file!</div>'; return; }
+  if (!file) { resultDiv.innerHTML = '<div class="alert alert-error" style="display:block;">⚠️ Pilih file!</div>'; return; }
   const reader = new FileReader();
   reader.onload = function(e) {
     try {
